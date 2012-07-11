@@ -1,0 +1,48 @@
+* Modes :
+- Histoire (pas la peine d'une vraie histoire :p) : player vs bot -> X mondes à finir avec de plus en plus de bots et/ou plus difficiles
+- Plusieurs niveaux ?
+- Multijoueur : jusqu'à 4 et le dernier survivant gagne
+- Éditeur de cartes
+
+
+* Cartes :
+- Utilisation de tiles
+- Taille des cartes fixes ?
+- Tiles animés ?
+- Tiles avec propriétés (capacité de déplacements des perso diminués (terrain difficile) voir nul (montagne)).
+
+* Terrains possibles :
+- Terre
+- Herbe
+- Eau
+- Montagne
+- Chateau
+- ???
+
+* Persos : 
+- 6 au début, achat possible ?
+- équipement non changeable en v1
+- déplacement par tour dépend du perso et des tiles où il peut marcher.
+- niveau en mode histoire (1 à 10)
+- possibilité de capturer des monstres
+- les gentils, les méchants et les monstres
+
+* Élements naturels :
+- chaque perso est lié à un élément : eau, terre, bois, feu
+
+* Classes de perso (pouvoirs) :
+- chevalier : 
+- mage :
+- soigneur :
+- archer :
+- monstre
+
+Tour de jeu :
+- Le joueur dont c'est le tour peut faire une action parmi les actions suivantes pendant son tour pour chacun de ses persos :
+- commencer un combat
+- lancer un sort
+et se déplacer.
+
+Combats :
+- les combats se déroulent en 1v1. Si c'est un combat au corps à corps, il se déroule en 2 phases : l'attaquant attaque une première fois (il peut attaquer avec son arme, lancer un sort ou invoquer un monstre ou essayer de fuir). Le défenseur attaque à son tour de la même façon (s'il fuit la proba de réussite est plus faible). On fait ça 2 fois.
+S'il s'agit d'une attaque à distance et que le personnage attaqué peut répondre à l'attaque (magie ou arme), il peut le faire. 

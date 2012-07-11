@@ -1,0 +1,32 @@
+Faire 2 fois :
+Choix attaque J1;
+Selon (attaque J1) :
+ * arme :
+   effectuer J1.arme.animation;
+   effectuer J1.arme.effet (toujours J2.ennemi_courant perd arme.degat*pondération ?);
+ * magie :
+   effectuer J1.magie.animation;
+   effectuer J1.magie.effet;
+ * monstre :
+   effectuer J1.monstre.animation;
+   effectuer J1.monstre.effet;
+ * fuite :
+   effectuer J1.fuite;
+   si J1 fuit, fin combat;
+fin Selon que;
+
+Choix attaque J2;
+Selon (attaque J2) :
+ * arme :
+   effectuer J2.arme.animation;
+   effectuer J2.arme.effet (toujours J1.ennemi_courant perd arme.degat*pondération ?);
+ * magie :
+   effectuer J2.magie.animation;
+   effectuer J2.magie.effet;
+ * monstre :
+   effectuer J2.monstre.animation;
+   effectuer J2.monstre.effet;
+ * fuite :
+   effectuer J2.fuite;
+   si J2 fuit, fin combat;
+fin Selon que;

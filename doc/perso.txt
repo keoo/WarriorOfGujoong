@@ -1,0 +1,9 @@
+Données nécessaires aux personnages :
+
+HP : health point
+MP : magic point
+AP : attack point
+DP : defense point
+SP : move point (number of cases he can move on in a turn)
+LP : luck point for escape ?
+Element : Earth, Air, Fire, Water

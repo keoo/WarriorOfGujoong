@@ -1,0 +1,7 @@
+- Plusieurs niveaux de difficulté en mode histoire
+
+- Tiles animés
+
+- Equipement changeable
+
+- les monstres qu'on tue sont capturés (on ne peut pas avoir plus de 4 monstres, on peut pas les virer sauf s'ils se font tuer, si le joueur a déjà 4 monstres et tue un autre monstre, il n'est pas capturé)

@@ -1,15 +1,21 @@
+* Technologies :
+- Jeu multiplateforme (enfin si ça marche ailleurs...)
+- Qt version 4.7 minimum ?
+- C++
+- langage de script ?
+- pour le dessin : opengl, qgraphicsView, autre... ???
+
 * Modes :
-- Histoire (pas la peine d'une vraie histoire :p) : player vs bot -> X mondes à finir avec de plus en plus de bots et/ou plus difficiles
-- Plusieurs niveaux ?
+- Histoire (pas la peine d'une vraie histoire :p) : player vs bot -> X mondes à finir avec de plus en plus de bots et/ou plus difficiles, 2 façons de gagner : poutrer tous les méchants ou arriver au chateau adverse.
 - Multijoueur : jusqu'à 4 et le dernier survivant gagne
 - Éditeur de cartes
-
+- Possibilité d'enregistrer des parties en solo et de les charger (on repart du début du monde en cours ou on essaye de repartir de l'action en cours ?).
 
 * Cartes :
 - Utilisation de tiles
 - Taille des cartes fixes ?
-- Tiles animés ?
 - Tiles avec propriétés (capacité de déplacements des perso diminués (terrain difficile) voir nul (montagne)).
+- Les ennemis sont en mode "anonyme" tant qu'ils n'ont pas eu aucune intéraction avec un perso allié (lancé/reçu un sort, attaqué ou défendu).
 
 * Terrains possibles :
 - Terre
@@ -21,28 +27,54 @@
 
 * Persos : 
 - 6 au début, achat possible ?
-- équipement non changeable en v1
+- équipement (arme, bouclier, autre ?) par défaut.
 - déplacement par tour dépend du perso et des tiles où il peut marcher.
-- niveau en mode histoire (1 à 10)
-- possibilité de capturer des monstres
-- les gentils, les méchants et les monstres
+- niveau en mode histoire (1 à 10, tous les 10xp, les stats augmentent avec le niveau)
+- les gentils, les méchants et les monstres (les monstres ne se déplacent que s'ils peuvent attaquer un gentil)
 
 * Élements naturels :
-- chaque perso est lié à un élément : eau, terre, bois, feu
+- chaque perso est lié à un élément : eau, terre, air, feu
+- Eau > Feu > Air > Eau, la Terre est neutre (élément des magiciens).
 
 * Classes de perso (pouvoirs) :
-- chevalier : 
-- mage :
-- soigneur :
-- archer :
+- chevalier
+- mage
+- soigneur
+- archer ?
 - monstre
 
-Tour de jeu :
+* Sorts :
+- scan : permet de voir les caractéristiques d'un ennemi (grande portée).
+- fire, cold, dust : attaque basique par élément
+- burst, diamond, tornado : attaque moyenne
+- heal, faith : soigne un peu et beaucoup
+
+* Début de partie :
+- Le joueur commence toujours (pas l'ia), si plusieurs joueurs, faire random et garder l'ordre.
+- S'il a plus de 9 personnages, il choisit avant l'apparition de la carte quels sont les 9 personnages qu'il utilise.
+
+* Tour de jeu :
 - Le joueur dont c'est le tour peut faire une action parmi les actions suivantes pendant son tour pour chacun de ses persos :
 - commencer un combat
 - lancer un sort
 et se déplacer.
+- Un personnage qui a fait ses actions voit sur l'icone de son personnage un petit carré en bas à droite (coloré avec/sans texte ?) pour signaler qu'il a fait ses actions.
 
-Combats :
+* Combats :
 - les combats se déroulent en 1v1. Si c'est un combat au corps à corps, il se déroule en 2 phases : l'attaquant attaque une première fois (il peut attaquer avec son arme, lancer un sort ou invoquer un monstre ou essayer de fuir). Le défenseur attaque à son tour de la même façon (s'il fuit la proba de réussite est plus faible). On fait ça 2 fois.
 S'il s'agit d'une attaque à distance et que le personnage attaqué peut répondre à l'attaque (magie ou arme), il peut le faire. 
+- Le personnage qui tue un ennemi gagne 4xp quelque soit l'ennemi.
+- L'or gagné dépend de l'ennemi tué.
+
+* Interactions :
+- Le jeu est jouable à la souris et avec des raccourcis clavier (clavier seulement : mode vi(m) avec possibilité de "scripter" les déplacements ?). Il faut sélectionner un personnage pour effectuer une action. Si le curseur se déplace sur un personnage, une image sur la map affiche le personnage en plus grand et ses caractéristiques.
+- Si un personnage est sélectionné, les cases où le personnage ne peut pas aller deviennent plus sombre. La souris ne peut pas dépasser ces cases tant qu'on est en sélection de ce personnage. Pour valider un déplacement il faut appuyer sur la case ou l'on veut que le personnage se déplace. Pour désélectionner un perosnnage, il faut faire un clic droit avec la souris. 
+- Pour finir un tour, il faut appuyer sur le bouton 'fin de tour' et confirmer.
+
+* Fin de niveau :
+- A la fin du niveau courant, le joueur peut faire (s'il le souhaite), un mini jeu (à définir) afin de gagner de l'or en plus.
+- Le joueur se trouve dans une petite ville avec plusieurs batiments lui permettant d'acheter des personnages supplémentaires selon le niveau, des sorts pour ses magiciens, (de l'équipement pour la suite).
+
+
+** TODO **
+Définir l'interface graphique : menu initial, autres menus, partie en cours, combats, achats...

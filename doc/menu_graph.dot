@@ -1,0 +1,24 @@
+/* http://www.graphviz.org/pdf/dotguide.pdf 
+ * dot -Tpng menu_graph.dot -o menu_graph.png
+ */
+
+digraph Menu {
+        mainMenu [shape=Mdiamond];
+        mainMenu -> "New game";
+        "New game" [shape=box];
+        mainMenu -> Continue;
+        Continue -> "Book 1";
+        Continue -> "Book 2";
+        Continue -> "Book 3";
+        Continue -> mainMenu;
+        "Book 1" [shape=box] "Book 2"[shape=box] "Book 3"[shape=box];
+        mainMenu -> Options;
+        Options -> "Language" -> Options;
+        "Language" -> changeLanguage [arrowhead=dot, label="emit", color=blue];
+        changeLanguage [style=filled,color=".9 .1 .4", shape=hexagon];
+        Options -> "Screen size" -> Options;
+        "Screen size" -> Resize [arrowhead=dot, label="emit", color=blue];
+        "Resize" [style=filled,color=".9 .1 .4", shape=hexagon];
+        Options -> "Commands" -> Options;
+        Options -> mainMenu;
+}

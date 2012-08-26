@@ -3,7 +3,7 @@
 
 #include <qfile.h>
 #include <qdom.h>
-#include <qapplication.h>
+//#include <qapplication.h>
 #include <QPixmap>
 
 #include <iostream>

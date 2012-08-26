@@ -4,17 +4,32 @@
 #
 #-------------------------------------------------
 
-QT       += testlib
-
-QT       -= gui
+QT       += testlib core xml gui
 
 TARGET = tst_testtest
 CONFIG   += console
 CONFIG   -= app_bundle
-CONFIG += qtestlib
 
 TEMPLATE = app
 
+HEADERS += \
+    AutoTest.hpp
 
-SOURCES += tst_testtest.cpp
+SOURCES += \
+    main.cpp \
+    tst_modeltest.cpp
+
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+
+# Sources for model test
+SOURCES += \
+    ../src/modelarea.cpp \
+    ../src/modelworld.cpp
+
+HEADERS += ../src/modelarea.h \
+    ../src/modelworld.h
+
+
+
+

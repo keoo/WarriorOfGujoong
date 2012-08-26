@@ -17,7 +17,7 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
         modelarea.h \
-        modelworld.h
+        modelworld.h \
         core/WGObject.cc \
         core/Position.cc
 

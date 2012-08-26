@@ -1,0 +1,4 @@
+v0.001 alpha-pre-0.0002:
+- Gestion des persos.
+- Tiles et un MapLoader.
+- Interface graphique qui charge la map, les persos et les affiche.

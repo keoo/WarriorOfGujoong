@@ -12,9 +12,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    graphicsscene.cpp
+        graphicsscene.cpp
 
 HEADERS  += mainwindow.h \
-    graphicsscene.hpp
+        graphicsscene.hpp
+        core/WGObject.cc \
+        core/Position.cc
+
+HEADERS  += mainwindow.h \
+        core/WGObject.hh \
+        core/Position.hh
 
 FORMS    += mainwindow.ui

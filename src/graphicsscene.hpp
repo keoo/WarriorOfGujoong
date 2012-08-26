@@ -11,16 +11,11 @@ class GraphicsScene : public QGraphicsScene
 public:
     explicit GraphicsScene(QObject *parent = 0);
 
-    /**
-     * Sets the map as current map. Does not free the memory used by the old map.
-     */
+    // Sets the map as current map. Does not free the memory used by the old map.
     void set_map(Map *new_map);
 
 private:
-    /**
-     * @brief current_map
-     * Data of the current map
-     */
+    // Data of the current map
     Map *current_map;
 
 signals:

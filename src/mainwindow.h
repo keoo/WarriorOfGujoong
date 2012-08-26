@@ -19,9 +19,7 @@ public:
     
 private:
     Ui::MainWindow *ui;
-    /**
-     * Scene where the game takes place. The view used is ui->main_view
-     */
+    // Scene where the game takes place. The view used is ui->main_view
     GraphicsScene *_scene;
 
 protected slots:

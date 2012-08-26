@@ -1,7 +1,11 @@
-#include "Position.hh"
-#include "WGObject.hh"
+#include "Position.hpp"
+#include "WGObject.hpp"
 
 WGObject::WGObject():QObject(){
+  _name = "";
+  _pos = Position(0.0,0.0,0.0);
+}
+WGObject::WGObject(QObject* obj):QObject(obj){
   _name = "";
   _pos = Position(0.0,0.0,0.0);
 }

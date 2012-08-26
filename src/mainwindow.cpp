@@ -1,6 +1,10 @@
 #include "graphicsscene.hpp"
+#include "modelworld.h"
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),ui(new Ui::MainWindow), _scene(new GraphicsScene())
@@ -19,6 +23,13 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::on_action_load_game_triggered() {
-    // Map *map = MapHandler::loadMap("default");
-    // m_scene->setCurrentMap(map);
+
+    qDebug("Load a game");
+    ModelWorld *mw = new ModelWorld("World.xml");
+    try {
+        _scene->create_world(mw, "1");
+    }
+    catch (const QString &e) {
+        QMessageBox::critical(this, "Critical error occured", e);
+    }
 }

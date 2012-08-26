@@ -14,8 +14,8 @@ class ModelArea
 public:
     ModelArea( QDomElement & elt , std::map < QString, QSharedPointer<QPixmap> > & tiles_map );
 
-    const int get_width () const;
-    const int get_height () const;
+    int get_width () const;
+    int get_height () const;
     const std::vector < std::vector<QSharedPointer<QPixmap> > > & get_tiles_grid() const ;
 
 

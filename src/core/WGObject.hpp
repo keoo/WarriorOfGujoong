@@ -8,7 +8,7 @@
 
 #include <QObject>
 
-#include "Position.hh"
+#include "Position.hpp"
 /**
  * \brief Root class for all objects
  * \class WGObject
@@ -19,6 +19,11 @@ public :
    * \brief Default constructor
    */
   WGObject();
+  /**
+   * \brief Constructor
+   * \param obj The Qt parent object
+   */
+  WGObject(QObject* obj);
   /**
    * \brief Copy constructor
    */

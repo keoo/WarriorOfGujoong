@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-    
+      
 private:
     Ui::MainWindow *ui;
     // Scene where the game takes place. The view used is ui->main_view

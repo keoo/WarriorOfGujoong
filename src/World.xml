@@ -1,0 +1,221 @@
+<World>
+    <tiles>
+        <tile id="castle1NW" path="/tmp/WarriorOfGujoong-tiles/tile-castle-001.png" />
+        <tile id="castle1N" path="/tmp/WarriorOfGujoong-tiles/tile-castle-002.png" />
+        <tile id="castle1NE" path="/tmp/WarriorOfGujoong-tiles/tile-castle-003.png" />
+        <tile id="castle1SW" path="/tmp/WarriorOfGujoong-tiles/tile-castle-004.png" />
+        <tile id="castle1S" path="/tmp/WarriorOfGujoong-tiles/tile-castle-005.png" />
+        <tile id="castle1SE" path="/tmp/WarriorOfGujoong-tiles/tile-castle-006.png" />
+        <tile id="castle2NW" path="/tmp/WarriorOfGujoong-tiles/tile-castle-011.png" />
+        <tile id="castle2N" path="/tmp/WarriorOfGujoong-tiles/tile-castle-012.png" />
+        <tile id="castle2NE" path="/tmp/WarriorOfGujoong-tiles/tile-castle-013.png" />
+        <tile id="castle2SW" path="/tmp/WarriorOfGujoong-tiles/tile-castle-014.png" />
+        <tile id="castle2S" path="/tmp/WarriorOfGujoong-tiles/tile-castle-015.png" />
+        <tile id="castle2SE" path="/tmp/WarriorOfGujoong-tiles/tile-castle-016.png" />
+        <tile id="coastNE" path="/tmp/WarriorOfGujoong-tiles/tile-coast-001.png" />
+        <tile id="coastN" path="/tmp/WarriorOfGujoong-tiles/tile-coast-002.png" />
+        <tile id="coastNWNESE" path="/tmp/WarriorOfGujoong-tiles/tile-coast-003.png" />
+        <tile id="coastE" path="/tmp/WarriorOfGujoong-tiles/tile-coast-004.png" />
+        <tile id="coastSE" path="/tmp/WarriorOfGujoong-tiles/tile-coast-005.png" />
+        <tile id="coastNESESW" path="/tmp/WarriorOfGujoong-tiles/tile-coast-006.png" />
+        <tile id="grass" path="/tmp/WarriorOfGujoong-tiles/tile-grass-001.png" />
+        <tile id="hill" path="/tmp/WarriorOfGujoong-tiles/tile-hill-001.png" />
+        <tile id="mountain" path="/tmp/WarriorOfGujoong-tiles/tile-mountain.png" />
+        <tile id="road" path="/tmp/WarriorOfGujoong-tiles/tile-road-001.png" />
+        <tile id="tree" path="/tmp/WarriorOfGujoong-tiles/tile-tree-001.png" />
+        <tile id="water" path="/tmp/WarriorOfGujoong-tiles/tile-water-001.png" />
+    </tiles>
+
+    <area id="1" width="20" height="9">
+
+        <position x="0" y="0" tileId="water" />
+        <position x="1" y="0" tileId="coastNE" />
+        <position x="2" y="0" tileId="coastN" />
+        <position x="3" y="0" tileId="coastN" />
+        <position x="4" y="0" tileId="coastNWNESE" />
+        <position x="5" y="0" tileId="grass" />
+        <position x="6" y="0" tileId="grass" />
+        <position x="7" y="0" tileId="grass" />
+        <position x="8" y="0" tileId="hill" />
+        <position x="9" y="0" tileId="hill" />
+        <position x="10" y="0" tileId="mountain" />
+        <position x="11" y="0" tileId="mountain" />
+        <position x="12" y="0" tileId="hill" />
+        <position x="13" y="0" tileId="grass" />
+        <position x="14" y="0" tileId="grass" />
+        <position x="15" y="0" tileId="grass" />
+        <position x="16" y="0" tileId="grass" />
+        <position x="17" y="0" tileId="hill" />
+        <position x="18" y="0" tileId="hill" />
+        <position x="19" y="0" tileId="grass" />
+
+        <position x="0" y="1" tileId="coastNE" />
+        <position x="1" y="1" tileId="coastNWNESE" />
+        <position x="2" y="1" tileId="grass" />
+        <position x="3" y="1" tileId="road" />
+        <position x="4" y="1" tileId="road" />
+        <position x="5" y="1" tileId="road" />
+        <position x="6" y="1" tileId="road" />
+        <position x="7" y="1" tileId="road" />
+        <position x="8" y="1" tileId="grass" />
+        <position x="9" y="1" tileId="hill" />
+        <position x="10" y="1" tileId="hill" />
+        <position x="11" y="1" tileId="hill" />
+        <position x="12" y="1" tileId="hill" />
+        <position x="13" y="1" tileId="road" />
+        <position x="14" y="1" tileId="road" />
+        <position x="15" y="1" tileId="road" />
+        <position x="16" y="1" tileId="road" />
+        <position x="17" y="1" tileId="road" />
+        <position x="18" y="1" tileId="grass" />
+        <position x="19" y="1" tileId="grass" />
+
+        <position x="0" y="2" tileId="coastE" />
+        <position x="1" y="2" tileId="grass" />
+        <position x="2" y="2" tileId="road" />
+        <position x="3" y="2" tileId="road" />
+        <position x="4" y="2" tileId="tree" />
+        <position x="5" y="2" tileId="grass" />
+        <position x="6" y="2" tileId="grass" />
+        <position x="7" y="2" tileId="road" />
+        <position x="8" y="2" tileId="grass" />
+        <position x="9" y="2" tileId="grass" />
+        <position x="10" y="2" tileId="hill" />
+        <position x="11" y="2" tileId="hill" />
+        <position x="12" y="2" tileId="grass" />
+        <position x="13" y="2" tileId="road" />
+        <position x="14" y="2" tileId="grass" />
+        <position x="15" y="2" tileId="grass" />
+        <position x="16" y="2" tileId="grass" />
+        <position x="17" y="2" tileId="road" />
+        <position x="18" y="2" tileId="tree" />
+        <position x="19" y="2" tileId="grass" />
+
+        <position x="0" y="3" tileId="coastE" />
+        <position x="1" y="3" tileId="grass" />
+        <position x="2" y="3" tileId="road" />
+        <position x="3" y="3" tileId="grass" />
+        <position x="4" y="3" tileId="tree" />
+        <position x="5" y="3" tileId="grass" />
+        <position x="6" y="3" tileId="grass" />
+        <position x="7" y="3" tileId="road" />
+        <position x="8" y="3" tileId="grass" />
+        <position x="9" y="3" tileId="grass" />
+        <position x="10" y="3" tileId="hill" />
+        <position x="11" y="3" tileId="grass" />
+        <position x="12" y="3" tileId="grass" />
+        <position x="13" y="3" tileId="road" />
+        <position x="14" y="3" tileId="grass" />
+        <position x="15" y="3" tileId="grass" />
+        <position x="16" y="3" tileId="tree" />
+        <position x="17" y="3" tileId="road" />
+        <position x="18" y="3" tileId="tree" />
+        <position x="19" y="3" tileId="tree" />
+
+        <position x="0" y="4" tileId="coastE" />
+        <position x="1" y="4" tileId="castle1SW" />
+        <position x="2" y="4" tileId="castle1S" />
+        <position x="3" y="4" tileId="castle1SE" />
+        <position x="4" y="4" tileId="grass" />
+        <position x="5" y="4" tileId="grass" />
+        <position x="6" y="4" tileId="grass" />
+        <position x="7" y="4" tileId="road" />
+        <position x="8" y="4" tileId="grass" />
+        <position x="9" y="4" tileId="grass" />
+        <position x="10" y="4" tileId="grass" />
+        <position x="11" y="4" tileId="grass" />
+        <position x="12" y="4" tileId="grass" />
+        <position x="13" y="4" tileId="road" />
+        <position x="14" y="4" tileId="grass" />
+        <position x="15" y="4" tileId="grass" />
+        <position x="16" y="4" tileId="castle2SW" />
+        <position x="17" y="4" tileId="castle2S" />
+        <position x="18" y="4" tileId="castle2SE" />
+        <position x="19" y="4" tileId="road" />
+
+        <position x="0" y="5" tileId="coastE" />
+        <position x="1" y="5" tileId="castle1NW" />
+        <position x="2" y="5" tileId="castle1N" />
+        <position x="3" y="5" tileId="castle1NE" />
+        <position x="4" y="5" tileId="grass" />
+        <position x="5" y="5" tileId="grass" />
+        <position x="6" y="5" tileId="grass" />
+        <position x="7" y="5" tileId="road" />
+        <position x="8" y="5" tileId="tree" />
+        <position x="9" y="5" tileId="grass" />
+        <position x="10" y="5" tileId="grass" />
+        <position x="11" y="5" tileId="grass" />
+        <position x="12" y="5" tileId="grass" />
+        <position x="13" y="5" tileId="road" />
+        <position x="14" y="5" tileId="grass" />
+        <position x="15" y="5" tileId="grass" />
+        <position x="16" y="5" tileId="castle2NW" />
+        <position x="17" y="5" tileId="castle2N" />
+        <position x="18" y="5" tileId="castle2NE" />
+        <position x="19" y="5" tileId="tree" />
+
+        <position x="0" y="6" tileId="coastE" />
+        <position x="1" y="6" tileId="grass" />
+        <position x="2" y="6" tileId="grass" />
+        <position x="3" y="6" tileId="grass" />
+        <position x="4" y="6" tileId="grass" />
+        <position x="5" y="6" tileId="grass" />
+        <position x="6" y="6" tileId="grass" />
+        <position x="7" y="6" tileId="road" />
+        <position x="8" y="6" tileId="road" />
+        <position x="9" y="6" tileId="road" />
+        <position x="10" y="6" tileId="road" />
+        <position x="11" y="6" tileId="road" />
+        <position x="12" y="6" tileId="road" />
+        <position x="13" y="6" tileId="road" />
+        <position x="14" y="6" tileId="grass" />
+        <position x="15" y="6" tileId="grass" />
+        <position x="16" y="6" tileId="tree" />
+        <position x="17" y="6" tileId="tree" />
+        <position x="18" y="6" tileId="tree" />
+        <position x="19" y="6" tileId="tree" />
+
+        <position x="0" y="7" tileId="coastSE" />
+        <position x="1" y="7" tileId="coastS" />
+        <position x="2" y="7" tileId="coastNESESW" />
+        <position x="3" y="7" tileId="grass" />
+        <position x="4" y="7" tileId="grass" />
+        <position x="5" y="7" tileId="grass" />
+        <position x="6" y="7" tileId="grass" />
+        <position x="7" y="7" tileId="grass" />
+        <position x="8" y="7" tileId="grass" />
+        <position x="9" y="7" tileId="grass" />
+        <position x="10" y="7" tileId="grass" />
+        <position x="11" y="7" tileId="grass" />
+        <position x="12" y="7" tileId="grass" />
+        <position x="13" y="7" tileId="grass" />
+        <position x="14" y="7" tileId="grass" />
+        <position x="15" y="7" tileId="grass" />
+        <position x="16" y="7" tileId="grass" />
+        <position x="17" y="7" tileId="grass" />
+        <position x="18" y="7" tileId="grass" />
+        <position x="19" y="7" tileId="tree" />
+
+        <position x="0" y="8" tileId="water" />
+        <position x="1" y="8" tileId="water" />
+        <position x="2" y="8" tileId="coastSE" />
+        <position x="3" y="8" tileId="coastS" />
+        <position x="4" y="8" tileId="coastS" />
+        <position x="5" y="8" tileId="coastS" />
+        <position x="6" y="8" tileId="coastS" />
+        <position x="7" y="8" tileId="coastS" />
+        <position x="8" y="8" tileId="coastNESESW" />
+        <position x="9" y="8" tileId="grass" />
+        <position x="10" y="8" tileId="grass" />
+        <position x="11" y="8" tileId="grass" />
+        <position x="12" y="8" tileId="grass" />
+        <position x="13" y="8" tileId="grass" />
+        <position x="14" y="8" tileId="grass" />
+        <position x="15" y="8" tileId="grass" />
+        <position x="16" y="8" tileId="grass" />
+        <position x="17" y="8" tileId="grass" />
+        <position x="18" y="8" tileId="grass" />
+        <position x="19" y="8" tileId="grass" />
+
+    </area>
+</World>

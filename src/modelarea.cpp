@@ -4,7 +4,7 @@
 
 using namespace std;
 
-ModelArea::ModelArea( QDomElement & elt , const map < QString, QSharedPointer<QPixmap> > & tiles_map )
+ModelArea::ModelArea( QDomElement & elt , map < QString, QSharedPointer<QPixmap> > & tiles_map )
 {
     if ( elt.tagName() == "area" && elt.hasAttribute("width") && elt.hasAttribute("height") )
     {
@@ -24,7 +24,7 @@ ModelArea::ModelArea( QDomElement & elt , const map < QString, QSharedPointer<QP
             {
                 int x = QString(child.attribute("x")).toInt();
                 int y = QString(child.attribute("y")).toInt();
-                QSharedPointer<QPixmap> tile ( tiles_map[child.getAttribute("tileId")] );
+                QSharedPointer<QPixmap> tile ( tiles_map[child.attribute("tileId")] );
                 this->tiles_grid.at(x).at(y)  = tile;
             }
             child = child.nextSibling().toElement();

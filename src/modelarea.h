@@ -12,7 +12,7 @@ class QPixmap;
 class ModelArea
 {
 public:
-    ModelArea( QDomElement & elt , const std::map < QString, QSharedPointer<QPixmap> > & tiles_map );
+    ModelArea( QDomElement & elt , std::map < QString, QSharedPointer<QPixmap> > & tiles_map );
 
     const int get_width () const;
     const int get_height () const;

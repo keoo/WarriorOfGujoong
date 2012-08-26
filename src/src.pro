@@ -12,12 +12,14 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
+        graphicsscene.cpp \
         modelarea.cpp \
         modelworld.cpp \
         core/WGObject.cpp \
         core/Position.cpp
 
 HEADERS  += mainwindow.h \
+        graphicsscene.hpp \
         modelarea.h \
         modelworld.h \
         core/WGObject.hpp \

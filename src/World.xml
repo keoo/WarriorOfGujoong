@@ -18,6 +18,7 @@
         <tile id="coastE" path="/tmp/WarriorOfGujoong-tiles/tile-coast-004.png" />
         <tile id="coastSE" path="/tmp/WarriorOfGujoong-tiles/tile-coast-005.png" />
         <tile id="coastNESESW" path="/tmp/WarriorOfGujoong-tiles/tile-coast-006.png" />
+        <tile id="coastS" path="/tmp/WarriorOfGujoong-tiles/tile-coast-007.png" />
         <tile id="grass" path="/tmp/WarriorOfGujoong-tiles/tile-grass-001.png" />
         <tile id="hill" path="/tmp/WarriorOfGujoong-tiles/tile-hill-001.png" />
         <tile id="mountain" path="/tmp/WarriorOfGujoong-tiles/tile-mountain.png" />

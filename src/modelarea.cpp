@@ -11,7 +11,7 @@ ModelArea::ModelArea( QDomElement & elt , map < QString, QSharedPointer<QPixmap>
         // Creating tiles_grid
         this->tiles_grid.resize(QString(elt.attribute("width")).toInt());
         int height = QString(elt.attribute("height")).toInt();
-        for ( int i = 0 ; i < this->tiles_grid.size() ; i ++ )
+        for ( unsigned int i = 0 ; i < this->tiles_grid.size() ; i ++ )
         {
             this->tiles_grid.at(i).resize(height);
         }
@@ -35,12 +35,12 @@ ModelArea::ModelArea( QDomElement & elt , map < QString, QSharedPointer<QPixmap>
 }
 
 
-const int ModelArea::get_width () const
+int ModelArea::get_width () const
 {
     return this->tiles_grid.size();
 }
 
-const int ModelArea::get_height () const
+int ModelArea::get_height () const
 {
 
     return this->tiles_grid.size() == 0 ? 0 : this->tiles_grid.at(0).size();

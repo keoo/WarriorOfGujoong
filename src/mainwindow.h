@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+class GraphicsScene;
+
 namespace Ui {
 class MainWindow;
 }
@@ -17,6 +19,14 @@ public:
     
 private:
     Ui::MainWindow *ui;
+    /**
+     * Scene where the game takes place. The view used is ui->main_view
+     */
+    GraphicsScene *_scene;
+
+protected slots:
+    void on_action_load_game_triggered();
+
 };
 
 #endif // MAINWINDOW_H

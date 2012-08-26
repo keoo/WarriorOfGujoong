@@ -13,13 +13,15 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
         modelarea.cpp \
-        modelworld.cpp
+        modelworld.cpp \
+        core/WGObject.cc \
+        core/Position.cc
 
 HEADERS  += mainwindow.h \
         modelarea.h \
         modelworld.h \
-        core/WGObject.cc \
-        core/Position.cc
+        core/WGObject.hh \
+        core/Position.hh
 
 FORMS    += mainwindow.ui
 

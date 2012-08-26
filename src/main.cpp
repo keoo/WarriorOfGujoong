@@ -1,7 +1,7 @@
 #include <QtGui/QApplication>
 #include "mainwindow.h"
 
-#include "modelmap.h"
+#include "modelworld.h"
 
 int main(int argc, char *argv[])
 {

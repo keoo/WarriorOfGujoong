@@ -6,12 +6,20 @@
 
 #include <QMessageBox>
 
+// TMP wait for keoo
+#include "core/WGObject.hpp"
+// End TMP
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),ui(new Ui::MainWindow), _scene(new GraphicsScene())
 {
     ui->setupUi(this);
 
+    ui->main_view->setMouseTracking(true);
+
     ui->main_view->setScene(_scene);
+
+    ui->main_view->scale(2, 2);
 
     setMinimumSize(800, 600);
 }
@@ -28,6 +36,19 @@ void MainWindow::on_action_load_game_triggered() {
     ModelWorld *mw = new ModelWorld("World.xml");
     try {
         _scene->create_world(mw, "1");
+
+        // TMP wait for keoo
+        QVector<WGObject *> objects;
+        WGObject *obj = new WGObject();
+        obj->setName("/tmp/WarriorOfGujoong-tiles/fighter.png");
+        obj->setPosition(Position(5, 5, 0));
+        objects.push_back(obj);
+        obj = new WGObject();
+        obj->setName("/tmp/WarriorOfGujoong-tiles/princess.png");
+        obj->setPosition(Position(6, 5, 0));
+        objects.push_back(obj);
+        _scene->add_objects(objects);
+        // End TMP
     }
     catch (const QString &e) {
         QMessageBox::critical(this, "Critical error occured", e);

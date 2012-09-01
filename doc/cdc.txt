@@ -2,7 +2,7 @@
 - Jeu multiplateforme (enfin si ça marche ailleurs...)
 - Qt version 4.7 minimum
 - C++
-- pour le dessin : TBD  (To Be Defined)
+- pour le dessin : qgraphicsview
 
 * Modes :
 - Histoire (pas la peine d'une vraie histoire :p) : player vs bot -> X mondes à finir avec de plus en plus de bots et/ou plus difficiles, 2 façons de gagner : poutrer tous les méchants ou arriver au chateau adverse.

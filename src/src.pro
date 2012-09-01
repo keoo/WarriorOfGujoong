@@ -16,14 +16,16 @@ SOURCES += main.cpp\
         modelarea.cpp \
         modelworld.cpp \
         core/WGObject.cpp \
-        core/Position.cpp
+        core/Position.cpp \
+    graphicsobject.cpp
 
 HEADERS  += mainwindow.h \
         graphicsscene.hpp \
         modelarea.h \
         modelworld.h \
         core/WGObject.hpp \
-        core/Position.hpp
+        core/Position.hpp \
+    graphicsobject.hpp
 
 FORMS    += mainwindow.ui
 

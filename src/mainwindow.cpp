@@ -1,10 +1,11 @@
-#include "graphicsscene.hpp"
+#include "scene/graphicsscene.hpp"
 #include "modelworld.h"
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QMessageBox>
+#include "persostatistics.hpp"
 
 // TMP wait for keoo
 #include "core/WGObject.hpp"
@@ -22,6 +23,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->main_view->scale(2, 2);
 
     setMinimumSize(800, 600);
+
+    _stats_view = new PersoStatistics(parent);
+    _stats_view->setVisible(false);
+
+    connect(_scene, SIGNAL(signal_perso_mouse_hovered(/*Perso **/)), _stats_view, SLOT(slot_show_view(/*Perso **/)));
+    connect(_scene, SIGNAL(signal_perso_mouse_quit_hovered()), _stats_view, SLOT(slot_hide_view()));
 }
 
 MainWindow::~MainWindow()

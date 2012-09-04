@@ -4,11 +4,11 @@
 #include <QPixmap>
 #include <QSize>
 #include "modelarea.h"
-#include "graphicsscene.hpp"
+#include "scene/graphicsscene.hpp"
 
 #include <QGraphicsPixmapItem>
 #include <iostream>
-#include "graphicsobject.hpp"
+#include "scene/graphicsobject.hpp"
 
 #include <QMessageBox>
 #include <QGraphicsSceneMouseEvent>
@@ -57,6 +57,7 @@ void GraphicsScene::create_world(ModelWorld *new_model_world, const QString &wor
 // TMP wait for keoo
 void GraphicsScene::add_objects(const QVector<WGObject *> objects)
 {
+    // TODO Connect end of turn signal with all persos
     foreach(WGObject *obj, objects) {
         GraphicsObject *graphicObject = new GraphicsObject(obj, QPixmap(QString::fromStdString(obj->getName())).scaled(QSize(TILE_SIZE, TILE_SIZE)));
         graphicObject->setPos(obj->getPosition().getX()*TILE_SIZE, obj->getPosition().getY()*TILE_SIZE);
@@ -104,6 +105,7 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
         if(finish_turn()) {
             // TODO Reinit object turns
             // TODO Change current player
+            emit signal_end_of_turn();
         }
         break;
     case Qt::Key_Enter:
@@ -138,13 +140,12 @@ void GraphicsScene::click_action(const QPointF &pos) {
         unselect_object();
     }
     else {
-        QGraphicsItem *item = itemAt(pos);
-
-        if(item) {
-            // If the item is not from the map, it inherits of GraphicsObject
-            if(qgraphicsitem_cast<GraphicsObject *>(item)) {
-                // We show informations of the object
-                select_object((GraphicsObject *)item);
+        // Look if there is a perso at the position
+        foreach(QGraphicsItem *it, items(pos)) {
+            GraphicsObject *perso = qgraphicsitem_cast<GraphicsObject *>(it);
+            if(perso && !perso->has_moved()) {
+                // Select the perso
+                select_object(qgraphicsitem_cast<GraphicsObject *>(perso));
             }
         }
     }
@@ -154,8 +155,8 @@ bool GraphicsScene::finish_turn()
 {
 
     QMessageBox::StandardButton ask_for_finish_turn = QMessageBox::question((QWidget*)this->parent(), tr("End of turn ?"),
-                                    tr("Have you finished your turn ?"),
-                                    QMessageBox::Yes | QMessageBox::No);
+                                                                            tr("Have you finished your turn ?"),
+                                                                            QMessageBox::Yes | QMessageBox::No);
     return ask_for_finish_turn == QMessageBox::Yes;
 }
 
@@ -170,7 +171,28 @@ void GraphicsScene::move_action(const QPointF &new_pos) {
         QPointF cursor_pos;
         cursor_pos.setX(((int)new_pos.x() / TILE_SIZE) * TILE_SIZE);
         cursor_pos.setY(((int)new_pos.y() / TILE_SIZE) * TILE_SIZE);
+
+
+        // Look if there is a perso at the old position to hide the view
+        foreach(QGraphicsItem *it, items(_cursor_position->pos())) {
+            GraphicsObject *perso = qgraphicsitem_cast<GraphicsObject *>(it);
+            if(perso) {
+                emit signal_perso_mouse_quit_hovered();
+                break;
+            }
+        }
+
         _cursor_position->setPos(cursor_pos);
+
+        // Look if there is a perso at the new position
+        foreach(QGraphicsItem *it, items(new_pos)) {
+            GraphicsObject *perso = qgraphicsitem_cast<GraphicsObject *>(it);
+            if(perso) {
+                emit signal_perso_mouse_hovered();
+                break;
+            }
+        }
+
     }
 }
 
@@ -179,9 +201,16 @@ bool GraphicsScene::has_selected_object() const {
 }
 
 void GraphicsScene::unselect_object() {
+    if(_selected_item) {
+        _selected_item->set_selected(false);
+    }
     _selected_item = NULL;
 }
 
 void GraphicsScene::select_object(GraphicsObject *item) {
     _selected_item = item;
+    if(item) {
+        _selected_item->set_selected(true);
+    }
+
 }

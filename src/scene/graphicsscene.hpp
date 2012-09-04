@@ -56,7 +56,9 @@ private:
     bool finish_turn();
 
 signals:
-    
+    void signal_end_of_turn();
+    void signal_perso_mouse_hovered(/* Perso * */);
+    void signal_perso_mouse_quit_hovered();
 public slots:
     
 };

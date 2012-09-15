@@ -5,27 +5,59 @@
 #include <QBrush>
 #include <QPen>
 #include <QTimer>
-#include <QStyle>
-#include <QRadialGradient>
+#include <QGraphicsScene>
+#include <QGraphicsView>
+#include <QFile>
 #include <iostream>
 
 static const int UPDATE_PERIOD = 200;
 
-GraphicsObject::GraphicsObject(WGObject *obj, const QPixmap &pixmap) : QObject(), _obj(obj), _pixmap(new QGraphicsPixmapItem(pixmap, this))
+GraphicsObject::GraphicsObject(WGObject *obj) : QObject(), _obj(obj)
 {
 
-    addToGroup(_pixmap);
+    // Get images depending on the name
+    QStringList direction_list;
+    direction_list << "haut" << "bas" << "gauche" << "droite";
+    for(int i = 0 ; i < direction_list.size() ; i ++) {
+        // For each direction, we create a list of images
+        QSharedPointer<ImageGroup> img(new ImageGroup());
+        img.data()->_current_img = 0;
+        int tile_id = 0;
+        bool file_exists = true;
+        while(file_exists) {
+            // Check for next file
+            const QString filename = QString::fromStdString(obj->getName()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
+
+            if(QFile::exists(filename)) {
+                // File exists, we load the pixmap
+                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(16, 16), this));
+                img.data()->_items.last()->setVisible(false);
+            }
+            else {
+                file_exists = false;
+            }
+            std::cout << "Looking for " << filename.toStdString() << " : " << file_exists<< std::endl;
+
+            tile_id ++;
+        }
+        _pixmaps[(Direction)i] = img;
+    }
+
+    // Store default pixmap
+    _current_pixmap = _pixmaps[BOTTOM]->_items[0];
+    _current_pixmap->setVisible(true);
+    addToGroup(_current_pixmap);
+
     _status = new QGraphicsEllipseItem(this);
 
     // Draw ellipsis on the bottom right of the perso
-    const int w = pixmap.size().width();
+    const int w =  _current_pixmap->pixmap().size().width();
     const int size_ellipse = w/4;
     _status->setRect(w-size_ellipse, w-size_ellipse, size_ellipse, size_ellipse);
-
     _status->setBrush(QBrush(Qt::green));
-
     addToGroup(_status);
 
+    // Box drawn when we select the perso
     _selected_item_box = new QGraphicsRectItem(QRectF(0., 0., boundingRect().width(), boundingRect().height()), this);
     _selected_item_box->setPen(QPen(QBrush(QColor(Qt::yellow)), 1));
     _selected_item_box->setVisible(false);
@@ -47,8 +79,6 @@ void GraphicsObject::move_object_to(const QPointF &new_pos)
     _actions = ComputeMoves::create_moves(pos(), new_pos);
 
     _move_timer.start(UPDATE_PERIOD);
-
-    _has_move = true;
 }
 
 bool GraphicsObject::has_moved() const
@@ -74,8 +104,6 @@ void GraphicsObject::slot_perso_has_move(bool has_moved)
 
 }
 
-#include <QGraphicsScene>
-#include <QGraphicsView>
 void GraphicsObject::updateAnimation()
 {
     static bool zoom = false;
@@ -88,12 +116,23 @@ void GraphicsObject::updateAnimation()
     }
 
     scene()->views().at(0)->centerOn(this);
-
+    // Last move
     if(_actions->get_current_move() >= _actions->get_moves()->size()) {
         if(_actions->get_current_move() != 0) {
             setPos(_actions->get_moves()->at(_actions->get_current_move()-1)->pos_final);
         }
-        _pixmap->setPixmap(QPixmap(QString::fromStdString("/tmp/WarriorOfGujoong-tiles/princess.png")).scaled(16, 16));
+        _current_pixmap->setVisible(false);
+        _current_pixmap = _pixmaps[BOTTOM]->_items[0];
+        _current_pixmap->setVisible(true);
+
+        // Restart all pixmap counters
+        QMap<Direction, QSharedPointer<ImageGroup> >::iterator i = _pixmaps.begin();
+        while (i != _pixmaps.end()) {
+            ImageGroup * val = i.value().data();
+            val->_current_img = 0;
+            ++i;
+        }
+
 
         _move_timer.stop();
         ComputeMoves::release_moves(_actions);
@@ -106,20 +145,16 @@ void GraphicsObject::updateAnimation()
     else {
         Move *current_mv = _actions->get_moves()->at(_actions->get_current_move());
 
-        if(_current_image_name == "/tmp/WarriorOfGujoong-tiles/princess_droite_1.png") {
-            _current_image_name = "/tmp/WarriorOfGujoong-tiles/princess_droite_2.png";
-        }
-        else {
-            _current_image_name = "/tmp/WarriorOfGujoong-tiles/princess_droite_1.png";
-        }
-
         qreal t = .5;
         QPointF pt = (current_mv->pos_final-current_mv->pos_init) * t;
         moveBy(pt.x(), pt.y());
         _actions->get_current_move() += t;
 
-        _pixmap->setPixmap(QPixmap(QString::fromStdString(_current_image_name)).scaled(16, 16));
+        _current_pixmap->setVisible(false);
+        _current_pixmap = _pixmaps[current_mv->sens]->_items[_pixmaps[current_mv->sens]->_current_img];
+        _current_pixmap->setVisible(true);
 
+        _pixmaps[current_mv->sens]->_current_img = (_pixmaps[current_mv->sens]->_current_img+1) % _pixmaps[current_mv->sens]->_items.size();
 
     }
 }

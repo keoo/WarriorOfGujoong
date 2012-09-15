@@ -9,12 +9,17 @@
 
 #include "core/WGObject.hpp"
 
+struct ImageGroup {
+    int _current_img;
+    QList<QGraphicsPixmapItem *> _items;
+};
+
 class GraphicsObject : public QObject, public QGraphicsItemGroup
 {
     Q_OBJECT
 
 public:
-    GraphicsObject(WGObject *obj, const QPixmap &pixmap);
+    GraphicsObject(WGObject *obj);
     ~GraphicsObject();
 
     enum { Type = UserType + 4 };
@@ -36,7 +41,9 @@ public:
 private:
     WGObject *_obj;
 
-    QGraphicsPixmapItem *_pixmap;
+    QMap<Direction, QSharedPointer<ImageGroup> > _pixmaps;
+
+    QGraphicsPixmapItem *_current_pixmap;
 
     // has move
     QGraphicsEllipseItem *_status;

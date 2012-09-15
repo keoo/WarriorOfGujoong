@@ -23,6 +23,7 @@ GraphicsScene::GraphicsScene(QObject *parent) :
 
 GraphicsScene::~GraphicsScene() {
     free_data();
+    delete _cursor_position;
 }
 
 void GraphicsScene::free_data() {
@@ -30,6 +31,7 @@ void GraphicsScene::free_data() {
     delete _current_map;
     _current_map = NULL;
     _selected_item = NULL;
+    removeItem(_cursor_position);
     clear();
 }
 
@@ -59,7 +61,7 @@ void GraphicsScene::add_objects(const QVector<WGObject *> objects)
 {
     // TODO Connect end of turn signal with all persos
     foreach(WGObject *obj, objects) {
-        GraphicsObject *graphicObject = new GraphicsObject(obj, QPixmap(QString::fromStdString(obj->getName())).scaled(QSize(TILE_SIZE, TILE_SIZE)));
+        GraphicsObject *graphicObject = new GraphicsObject(obj);
         graphicObject->setPos(obj->getPosition().getX()*TILE_SIZE, obj->getPosition().getY()*TILE_SIZE);
         graphicObject->setZValue(1000);
         addItem(graphicObject);
@@ -192,7 +194,6 @@ void GraphicsScene::move_action(const QPointF &new_pos) {
                 break;
             }
         }
-
     }
 }
 

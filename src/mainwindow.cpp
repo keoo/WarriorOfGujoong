@@ -25,6 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setMinimumSize(800, 600);
 
     _stats_view = new PersoStatistics(parent);
+
     _stats_view->setVisible(false);
 
     connect(_scene, SIGNAL(signal_perso_mouse_hovered(/*Perso **/)), _stats_view, SLOT(slot_show_view(/*Perso **/)));
@@ -47,11 +48,11 @@ void MainWindow::on_action_load_game_triggered() {
         // TMP wait for keoo
         QVector<WGObject *> objects;
         WGObject *obj = new WGObject();
-        obj->setName("/tmp/WarriorOfGujoong-tiles/fighter.png");
+        obj->setName("/tmp/WarriorOfGujoong-tiles/fighter");
         obj->setPosition(Position(5, 5, 0));
         objects.push_back(obj);
         obj = new WGObject();
-        obj->setName("/tmp/WarriorOfGujoong-tiles/princess.png");
+        obj->setName("/tmp/WarriorOfGujoong-tiles/princess");
         obj->setPosition(Position(6, 5, 0));
         objects.push_back(obj);
         _scene->add_objects(objects);

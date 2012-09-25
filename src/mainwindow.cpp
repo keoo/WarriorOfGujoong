@@ -24,12 +24,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setMinimumSize(800, 600);
 
-    _stats_view = new PersoStatistics(parent);
+    /*
+ *_stats_view = new PersoStatistics(parent);
 
     _stats_view->setVisible(false);
+    */
 
-    connect(_scene, SIGNAL(signal_perso_mouse_hovered(/*Perso **/)), _stats_view, SLOT(slot_show_view(/*Perso **/)));
-    connect(_scene, SIGNAL(signal_perso_mouse_quit_hovered()), _stats_view, SLOT(slot_hide_view()));
+    //connect(_scene, SIGNAL(signal_perso_mouse_hovered(/*Perso **/)), _stats_view, SLOT(slot_show_view(/*Perso **/)));
+    //connect(_scene, SIGNAL(signal_perso_mouse_quit_hovered()), _stats_view, SLOT(slot_hide_view()));
+
 }
 
 MainWindow::~MainWindow()

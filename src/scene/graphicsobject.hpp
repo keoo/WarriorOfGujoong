@@ -36,6 +36,8 @@ public:
 
     void set_selected(bool select);
 
+    WGObject *get_object() const;
+
     MoveAction *_actions;
 
 private:
@@ -67,6 +69,9 @@ public slots:
      * @param has_moved
      */
     void slot_perso_has_move(bool has_moved);
+
+signals:
+    void signal_finish_moved();
 
 };
 

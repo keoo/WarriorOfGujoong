@@ -72,6 +72,10 @@ GraphicsObject::~GraphicsObject()
 {
 }
 
+WGObject *GraphicsObject::get_object() const {
+    return _obj;
+}
+
 void GraphicsObject::move_object_to(const QPointF &new_pos)
 {
     std::cout << "Mv from (" << pos().x() << ", "<<pos().y()<<") to (" << new_pos.x() << ", "<<new_pos.y()<<")" << std::endl;
@@ -135,6 +139,8 @@ void GraphicsObject::updateAnimation()
 
 
         _move_timer.stop();
+        emit(signal_finish_moved());
+
         ComputeMoves::release_moves(_actions);
         _actions = NULL;
 

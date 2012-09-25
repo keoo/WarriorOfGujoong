@@ -6,8 +6,15 @@
 #include <QVector>
 #include "core/WGObject.hpp"
 #include "modelworld.h"
+#include "actionmenuwindow.hpp"
 
 class GraphicsObject;
+
+enum ActionState {
+    WAITING,
+    MOVING,
+    END_MOVING
+};
 
 class GraphicsScene : public QGraphicsScene
 {
@@ -36,12 +43,17 @@ protected:
     void keyPressEvent(QKeyEvent *event);
 
 private:
+
+    ActionState _current_state;
+
     // Data of the current map
     ModelWorld *_current_map;
 
     QGraphicsRectItem *_cursor_position;
 
     GraphicsObject *_selected_item;
+
+    ActionMenuWindow *_action_menu;
 
     // Creates the graphical items of the map and display them according to their position
     void create_map(const QSharedPointer<ModelArea> &area);
@@ -59,8 +71,10 @@ signals:
     void signal_end_of_turn();
     void signal_perso_mouse_hovered(/* Perso * */);
     void signal_perso_mouse_quit_hovered();
+
 public slots:
-    
+    void move_finished();
+
 };
 
 #endif // GRAPHICSSCENE_HPP

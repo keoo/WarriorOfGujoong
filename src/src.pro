@@ -23,7 +23,8 @@ SOURCES += main.cpp\
         core/Position.cpp \
     scene/graphicsobject.cpp \
     computemoves.cpp \
-    persostatistics.cpp
+    persostatistics.cpp \
+    scene/actionmenuwindow.cpp
 
 HEADERS  += mainwindow.h \
         scene/graphicsscene.hpp \
@@ -33,7 +34,9 @@ HEADERS  += mainwindow.h \
         core/Position.hpp \
     scene/graphicsobject.hpp \
     computemoves.hpp \
-    persostatistics.hpp
+    persostatistics.hpp \
+    scene/actionmenuwindow.hpp \
+    constants/ChainConstants.hpp
 
 FORMS    += mainwindow.ui \
     persostatistics.ui

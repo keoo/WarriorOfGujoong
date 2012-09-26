@@ -4,6 +4,7 @@
 #include <QMainWindow>
 
 class GraphicsScene;
+class PersoStatistics;
 
 namespace Ui {
 class MainWindow;
@@ -21,6 +22,9 @@ private:
     Ui::MainWindow *ui;
     // Scene where the game takes place. The view used is ui->main_view
     GraphicsScene *_scene;
+
+    // Show view where statistics on perso are printed
+    PersoStatistics *_stats_view;
 
 protected slots:
     void on_action_load_game_triggered();

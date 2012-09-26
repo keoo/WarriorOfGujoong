@@ -1,4 +1,13 @@
-v0.001 alpha-pre-0.0002:
+v0.001 alpha-pre-0.0001:
 - Gestion des persos.
 - Tiles et un MapLoader.
 - Interface graphique qui charge la map, les persos et les affiche.
+
+v0.01 alpha-pre-0.0002:
+- Map avec nouveaux tiles.
+- Gestion des persos v0.002.
+- Loader de persos (graphique).
+- Affichage des données des persos.
+- Gérer le changement de tour.
+- Gestion des déplacements (déplacement une seule fois tant que le tour n'est pas fini + déplacement dynamique avec changement de sprites).
+- Réflexions sur l'implémentation de l'AI et algos de déplacements + visualisation des informations (différentes fenêtres utiles).

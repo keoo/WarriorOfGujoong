@@ -10,30 +10,30 @@ WGObject::WGObject(QObject* obj):QObject(obj){
   _pos = Position(0.0,0.0,0.0);
 }
 WGObject::WGObject(WGObject &obj):QObject(obj.parent()){
-  _name = obj.getName();
-  _pos  = obj.getPosition();
+  _name = obj.get_name();
+  _pos  = obj.get_position();
 }
 
 WGObject::~WGObject(){
 }
 
 void
-WGObject::setName(const std::string &name){
+WGObject::set_name(const std::string &name){
   _name = name;
 }
 
 void
-WGObject::setPosition(const Position& p){
+WGObject::set_position(const Position& p){
   _pos = p;
 }
 
 std::string
-WGObject::getName(){
+WGObject::get_name(){
   return _name;
 }
 
 Position&
-WGObject::getPosition(){
+WGObject::get_position(){
   return _pos;
 }
 

@@ -37,25 +37,25 @@ public :
    * \param name The new name
    */
   void
-  setName(const std::string &name);
+  set_name(const std::string &name);
   /**
    * \brief Set the x position value
    * \param x The new xvalue
    */
   void
-  setPosition(const Position& p);
+  set_position(const Position& p);
   /**
-   * \brief Get the name 
+   * \brief Get the name
    * \return The name
    */
   std::string
-  getName();
+  get_name();
   /**
    * \brief Get the position
    * \return The position
    */
   Position&
-  getPosition();
+  get_position();
   /**
    * \brief Move the object
    * \param pos The shift for the position

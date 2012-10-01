@@ -21,7 +21,6 @@ public :
    * \brief Default constructor
    */
   Item();
-  Item();
   /**
    * \brief Copy constructor
    */
@@ -35,9 +34,10 @@ public :
    * \brief Constructor
    * \param obj The Qt parent object
    */
-  Item(double HP = 0.0, double MP = 0.0,
+  Item(std::string name,
+       double HP = 0.0, double MP = 0.0,
        double strength = 0.0, double power = 0.0,
-       double def = 0.0, double mr = 0.0, 
+       double def = 0.0, double mr = 0.0,
        double luck = 0.0,
        QObject* obj = 0);
   ~Item();
@@ -78,6 +78,11 @@ public :
   void
   set_luck(const double luck);
   /**
+   * \brief Set name
+   */
+  void
+  set_name(std::string name);
+  /**
    * \brief Get HP
    */
   double
@@ -98,7 +103,7 @@ public :
   double
   get_strength();
   /**
-   * \brief Get power 
+   * \brief Get power
    */
   double
   get_power();
@@ -112,6 +117,11 @@ public :
    */
   double
   get_luck();
+  /**
+   * \brief Get name
+   */
+  std::string
+  get_name();
 
 protected :
   /**
@@ -143,3 +153,5 @@ protected :
    */
   double _luck;
 };
+
+#endif

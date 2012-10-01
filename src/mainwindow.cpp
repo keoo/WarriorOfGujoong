@@ -48,12 +48,12 @@ void MainWindow::on_action_load_game_triggered() {
         // TMP wait for keoo
         QVector<WGObject *> objects;
         WGObject *obj = new WGObject();
-        obj->setName("/tmp/WarriorOfGujoong-tiles/fighter");
-        obj->setPosition(Position(5, 5, 0));
+        obj->set_name("/tmp/WarriorOfGujoong-tiles/fighter");
+        obj->set_position(Position(5, 5, 0));
         objects.push_back(obj);
         obj = new WGObject();
-        obj->setName("/tmp/WarriorOfGujoong-tiles/princess");
-        obj->setPosition(Position(6, 5, 0));
+        obj->set_name("/tmp/WarriorOfGujoong-tiles/princess");
+        obj->set_position(Position(6, 5, 0));
         objects.push_back(obj);
         _scene->add_objects(objects);
         // End TMP

@@ -62,7 +62,7 @@ void GraphicsScene::add_objects(const QVector<WGObject *> objects)
     // TODO Connect end of turn signal with all persos
     foreach(WGObject *obj, objects) {
         GraphicsObject *graphicObject = new GraphicsObject(obj);
-        graphicObject->setPos(obj->getPosition().getX()*TILE_SIZE, obj->getPosition().getY()*TILE_SIZE);
+        graphicObject->setPos(obj->get_position().getX()*TILE_SIZE, obj->get_position().getY()*TILE_SIZE);
         graphicObject->setZValue(1000);
         addItem(graphicObject);
     }

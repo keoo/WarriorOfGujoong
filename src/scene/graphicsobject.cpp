@@ -26,7 +26,7 @@ GraphicsObject::GraphicsObject(WGObject *obj) : QObject(), _obj(obj)
         bool file_exists = true;
         while(file_exists) {
             // Check for next file
-            const QString filename = QString::fromStdString(obj->getName()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
+            const QString filename = QString::fromStdString(obj->get_name()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
 
             if(QFile::exists(filename)) {
                 // File exists, we load the pixmap

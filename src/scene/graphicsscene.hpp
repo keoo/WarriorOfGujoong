@@ -13,7 +13,8 @@ class GraphicsObject;
 enum ActionState {
     WAITING,
     MOVING,
-    END_MOVING
+    END_MOVING,
+    ATTACKING
 };
 
 class GraphicsScene : public QGraphicsScene
@@ -53,6 +54,8 @@ private:
 
     GraphicsObject *_selected_item;
 
+    QGraphicsPixmapItem *_attack_item;
+
     ActionMenuWindow *_action_menu;
 
     // Creates the graphical items of the map and display them according to their position
@@ -65,7 +68,11 @@ private:
 
     void move_action(const QPointF &new_pos);
 
+    void move_attack_sword(const QPointF &new_pos);
+
     bool finish_turn();
+
+    void move_finished();
 
 signals:
     void signal_end_of_turn();
@@ -73,7 +80,7 @@ signals:
     void signal_perso_mouse_quit_hovered();
 
 public slots:
-    void move_finished();
+    void propose_end_of_move_action();
 
 };
 

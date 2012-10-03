@@ -19,7 +19,8 @@
 #define TILE_SIZE 16
 
 GraphicsScene::GraphicsScene(QObject *parent) :
-    QGraphicsScene(parent), _current_state(WAITING), _current_map(NULL), _cursor_position(new QGraphicsRectItem()), _selected_item(NULL), _action_menu(new ActionMenuWindow())
+    QGraphicsScene(parent), _current_state(WAITING), _current_map(NULL), _cursor_position(new QGraphicsRectItem()), _selected_item(NULL),
+    _attack_item(new QGraphicsPixmapItem(QPixmap("/tmp/WarriorOfGujoong-tiles/weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))), _action_menu(new ActionMenuWindow())
 {
 }
 
@@ -34,7 +35,13 @@ void GraphicsScene::free_data() {
     delete _current_map;
     _current_map = NULL;
     _selected_item = NULL;
-    removeItem(_cursor_position);
+    if(_cursor_position->scene() != NULL) {
+        removeItem(_cursor_position);
+    }
+    if(_attack_item->scene() != NULL) {
+        removeItem(_attack_item);
+    }
+
     clear();
 }
 
@@ -53,6 +60,11 @@ void GraphicsScene::create_world(ModelWorld *new_model_world, const QString &wor
         // TODO Set to tile size
         _cursor_position->setRect(0, 0, TILE_SIZE, TILE_SIZE);
         addItem(_cursor_position);
+
+        addItem(_attack_item);
+        _attack_item->setZValue(110);
+        _attack_item->setVisible(false);
+
     }
     else {
         throw ("map " + world_name + " not found");
@@ -66,7 +78,7 @@ void GraphicsScene::add_objects(const QVector<WGObject *> objects)
     foreach(WGObject *obj, objects) {
         GraphicsObject *graphicObject = new GraphicsObject(obj);
         graphicObject->setPos(obj->getPosition().getX()*TILE_SIZE, obj->getPosition().getY()*TILE_SIZE);
-        graphicObject->setZValue(1000);
+        graphicObject->setZValue(10);
         addItem(graphicObject);
     }
 }
@@ -81,11 +93,11 @@ void GraphicsScene::create_map(const QSharedPointer <ModelArea> &area)  {
     for(int i = 0 ; i < map_width ; ++ i) {
         for(int j = 0 ; j < map_height ; ++ j) {
             const QPixmap *tile = (tiles[i][j]).data();
-            std::cout << i << " " << j << " " << tile << " is null : " << tile->isNull() << std::endl;
-            QSize size = tile->size();
+            const QSize &size = tile->size();
             // add the tile to the scene at the good position
             QGraphicsPixmapItem *item = new QGraphicsPixmapItem(*tile);
             addItem(item);
+            item->setZValue(0);
             item->moveBy(i*size.width(), j*size.height());
         }
     }
@@ -104,7 +116,11 @@ void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
         click_action(event->scenePos());
     }
     else {
+        // TODO Gérer le cas ou on attaque
         _current_state = WAITING;
+        _attack_item->setVisible(false);
+        move_finished();
+
     }
 }
 
@@ -162,6 +178,40 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
             break;
         }
         break;
+    case ATTACKING:
+        switch(event->key()) {
+        case Qt::Key_Escape:
+            _current_state = END_MOVING;
+            propose_end_of_move_action();
+            break;
+        case Qt::Key_Enter:
+        case Qt::Key_Return:
+            std::cout << "Do action : " << _action_menu->get_action().toStdString() << std::endl;
+            _current_state = WAITING;
+            _attack_item->setVisible(false);
+            // TODO Attack if an ennemi is under the sword
+
+            // Then finish the move
+            move_finished();
+            break;
+            /* TODO Attention si 2 ennemis sont a côté et que le deuxieme n'est pas censé être atteignable, ça
+            va être le cas avec le code qui suit... */
+        case Qt::Key_Up:
+            move_attack_sword(_attack_item->pos() + QPointF(0, -TILE_SIZE));
+            break;
+        case Qt::Key_Down:
+            move_attack_sword(_attack_item->pos() + QPointF(0, TILE_SIZE));
+            break;
+        case Qt::Key_Right:
+            move_attack_sword(_attack_item->pos() + QPointF(TILE_SIZE, 0));
+            break;
+        case Qt::Key_Left:
+            move_attack_sword(_attack_item->pos() + QPointF(-TILE_SIZE, 0));
+            break;
+        }
+        break;
+    default:
+        break;
     }
 }
 
@@ -172,7 +222,7 @@ void GraphicsScene::click_action(const QPointF &pos) {
         point_pos.setY(((int)pos.y() / TILE_SIZE) * TILE_SIZE);
 
         // Finish the move
-        connect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(move_finished()));
+        connect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(propose_end_of_move_action()));
         _selected_item->move_object_to(point_pos);
 
         // disable using any key or mouse
@@ -235,6 +285,24 @@ void GraphicsScene::move_action(const QPointF &new_pos) {
     }
 }
 
+
+void GraphicsScene::move_attack_sword(const QPointF &new_pos) {
+    // Get the position in cases
+    QPointF cursor_pos;
+    cursor_pos.setX(((int)new_pos.x() / TILE_SIZE) * TILE_SIZE);
+    cursor_pos.setY(((int)new_pos.y() / TILE_SIZE) * TILE_SIZE);
+
+    // Look if there is a perso at the new position
+    foreach(QGraphicsItem *it, items(new_pos)) {
+        GraphicsObject *perso = qgraphicsitem_cast<GraphicsObject *>(it);
+        if(perso /* && it has to be an ennemi */) {
+            _attack_item->setPos(cursor_pos);
+        }
+    }
+}
+
+
+
 bool GraphicsScene::has_selected_object() const {
     return _selected_item != NULL;
 }
@@ -251,17 +319,17 @@ void GraphicsScene::select_object(GraphicsObject *item) {
     if(item) {
         _selected_item->set_selected(true);
     }
-
 }
 
 bool has_ennemi_perso_around(const QPointF &) {
+    // TODO
     return true;
 }
 
-void GraphicsScene::move_finished() {
+void GraphicsScene::propose_end_of_move_action() {
     // Do action (spells if possible, fight if possible, nothing (always possible))
     QStringList possible_actions;
-    if(1/*TODO _selected_item->get_object()->has_spells()*/) {
+    if(0/*TODO _selected_item->get_object()->has_spells()*/) {
         possible_actions.push_back(Constants::MAGIC);
     }
     if(has_ennemi_perso_around(_cursor_position->pos())) {
@@ -272,7 +340,7 @@ void GraphicsScene::move_finished() {
     _action_menu->set_actions(possible_actions);
 
     // While action is not set, we wait for user to choose
-    while (_current_state != WAITING) {
+    while (_current_state != WAITING && _current_state != ATTACKING) {
         // If there is magic, we have to show the dialog box
         if(possible_actions.contains(Constants::MAGIC)) {
             _current_state = END_MOVING;
@@ -281,27 +349,36 @@ void GraphicsScene::move_finished() {
                     _current_state = WAITING;
                 }
                 else {
-                    std::cout << "Do : " << _action_menu->get_action().toStdString() << std::endl;
+                    std::cout << "Want to do : " << _action_menu->get_action().toStdString() << std::endl;
+                    if(_action_menu->get_action() == Constants::ATTACK) {
+                        _attack_item->setVisible(true);
+                        _attack_item->setPos(_selected_item->pos());
+                        _current_state = ATTACKING;
+                    }
                 }
             }
             else {
                 // Rejected action, we end the perso turn
                 _current_state = WAITING;
+                move_finished();
             }
         }
         // There is no magic
         // TODO : on fait quoi ? On affiche quand même le menu pour attaquer ou quitter ou on propose juste le curseur pour attaquer ???
-        else if (possible_actions.contains(Constants::ATTACK)){
-            _current_state = END_MOVING;
-            _action_menu->exec();
-            // Propose to attack neighbor
+        else if (possible_actions.contains(Constants::ATTACK)) {
+            _attack_item->setVisible(true);
+            _attack_item->setPos(_selected_item->pos());
+            _current_state = ATTACKING;
         }
         else {
             _current_state = WAITING;
+            move_finished();
         }
     }
+}
 
+void GraphicsScene::move_finished() {
     // Finish the perso action
-    disconnect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(move_finished()));
+    disconnect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(propose_end_of_move_action()));
     unselect_object();
 }

@@ -11,9 +11,11 @@
  * \brief State for personnages
  * \enum PState
  */
-enum PState {
+typedef enum PState {
   NONE,
   STUN,
   POISON,
   BOOST
 }PState;
+
+#endif

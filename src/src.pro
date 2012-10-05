@@ -21,6 +21,8 @@ SOURCES += main.cpp\
         modelworld.cpp \
         core/WGObject.cpp \
         core/Position.cpp \
+        core/Perso.cpp \
+        core/Item.cpp \
     scene/graphicsobject.cpp \
     computemoves.cpp \
     persostatistics.cpp \
@@ -32,11 +34,15 @@ HEADERS  += mainwindow.h \
         modelworld.h \
         core/WGObject.hpp \
         core/Position.hpp \
+        core/Item.hpp \
+        core/Perso.hpp \
+        core/PState.hpp \
     scene/graphicsobject.hpp \
     computemoves.hpp \
     persostatistics.hpp \
     scene/actionmenuwindow.hpp \
-    constants/ChainConstants.hpp
+    constants/ChainConstants.hpp \
+    util/direction.hpp
 
 FORMS    += mainwindow.ui \
     persostatistics.ui

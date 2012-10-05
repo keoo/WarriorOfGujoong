@@ -4,12 +4,7 @@
 #include <QPointF>
 #include <QList>
 
-enum Direction {
-    TOP,
-    BOTTOM,
-    LEFT,
-    RIGHT
-};
+#include "util/direction.hpp"
 
 struct Move {
     QPointF pos_init;

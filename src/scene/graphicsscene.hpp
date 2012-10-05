@@ -4,11 +4,12 @@
 #include <QGraphicsScene>
 #include <QPointer>
 #include <QVector>
-#include "core/WGObject.hpp"
-#include "modelworld.h"
-#include "actionmenuwindow.hpp"
 
+class ModelWorld;
+class ModelArea;
 class GraphicsObject;
+class ActionMenuWindow;
+class Perso;
 
 enum ActionState {
     WAITING,
@@ -28,10 +29,8 @@ public:
     // Sets the map as current map. Does not free the memory used by the old map.
     void create_world(ModelWorld *new_model_world, const QString &world_name);
 
-    // TMP wait for keoo
-    void add_objects(const QVector<WGObject *> objects);
-    // End TMP
-
+    // TODO load from files
+    void add_objects(const QVector<Perso *> objects);
 
     void select_object(GraphicsObject *item);
     void unselect_object();
@@ -76,7 +75,7 @@ private:
 
 signals:
     void signal_end_of_turn();
-    void signal_perso_mouse_hovered(/* Perso * */);
+    void signal_perso_mouse_hovered(Perso *perso);
     void signal_perso_mouse_quit_hovered();
 
 public slots:

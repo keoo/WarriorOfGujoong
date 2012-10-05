@@ -1,26 +1,34 @@
 #include <map>
+#include <iostream>
+
+#include <QGraphicsPixmapItem>
 #include <QString>
 #include <QSharedPointer>
 #include <QPixmap>
 #include <QSize>
-#include "modelarea.h"
-#include "scene/graphicsscene.hpp"
-
-#include <QGraphicsPixmapItem>
-#include <iostream>
-#include "scene/graphicsobject.hpp"
-
 #include <QMessageBox>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
 
+#include "core/Perso.hpp"
+
+#include "modelarea.h"
+#include "modelworld.h"
+
+#include "scene/graphicsscene.hpp"
+#include "scene/actionmenuwindow.hpp"
+
+#include "scene/graphicsobject.hpp"
+
+/* -- translation -- */
 #include "constants/ChainConstants.hpp"
 
 #define TILE_SIZE 16
 
 GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent), _current_state(WAITING), _current_map(NULL), _cursor_position(new QGraphicsRectItem()), _selected_item(NULL),
-    _attack_item(new QGraphicsPixmapItem(QPixmap("/tmp/WarriorOfGujoong-tiles/weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))), _action_menu(new ActionMenuWindow())
+    _attack_item(new QGraphicsPixmapItem(QPixmap("/tmp/WarriorOfGujoong-tiles/weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))),
+    _action_menu(new ActionMenuWindow())
 {
 }
 
@@ -72,13 +80,14 @@ void GraphicsScene::create_world(ModelWorld *new_model_world, const QString &wor
 }
 
 // TMP wait for keoo
-void GraphicsScene::add_objects(const QVector<WGObject *> objects)
-{
+void GraphicsScene::add_objects(const QVector<Perso *> objects) {
     // TODO Connect end of turn signal with all persos
-    foreach(WGObject *obj, objects) {
+    foreach(Perso *obj, objects) {
         GraphicsObject *graphicObject = new GraphicsObject(obj);
-        graphicObject->setPos(obj->getPosition().getX()*TILE_SIZE, obj->getPosition().getY()*TILE_SIZE);
+
+        graphicObject->setPos(obj->get_position().getX()*TILE_SIZE, obj->get_position().getY()*TILE_SIZE);
         graphicObject->setZValue(10);
+
         addItem(graphicObject);
     }
 }
@@ -222,7 +231,7 @@ void GraphicsScene::click_action(const QPointF &pos) {
         point_pos.setY(((int)pos.y() / TILE_SIZE) * TILE_SIZE);
 
         // Finish the move
-        connect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(propose_end_of_move_action()));
+        connect(_selected_item, SIGNAL(signal_finish_moved(bool)), this, SLOT(propose_end_of_move_action()));
         _selected_item->move_object_to(point_pos);
 
         // disable using any key or mouse
@@ -278,7 +287,7 @@ void GraphicsScene::move_action(const QPointF &new_pos) {
         foreach(QGraphicsItem *it, items(new_pos)) {
             GraphicsObject *perso = qgraphicsitem_cast<GraphicsObject *>(it);
             if(perso) {
-                emit signal_perso_mouse_hovered();
+                emit signal_perso_mouse_hovered(perso->get_object());
                 break;
             }
         }
@@ -379,6 +388,6 @@ void GraphicsScene::propose_end_of_move_action() {
 
 void GraphicsScene::move_finished() {
     // Finish the perso action
-    disconnect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(propose_end_of_move_action()));
+    disconnect(_selected_item, SIGNAL(signal_finish_moved(bool)), this, SLOT(propose_end_of_move_action()));
     unselect_object();
 }

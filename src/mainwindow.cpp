@@ -7,9 +7,7 @@
 #include <QMessageBox>
 #include "persostatistics.hpp"
 
-// TMP wait for keoo
-#include "core/WGObject.hpp"
-// End TMP
+#include "core/Perso.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),ui(new Ui::MainWindow), _scene(new GraphicsScene())
@@ -49,14 +47,14 @@ void MainWindow::on_action_load_game_triggered() {
         _scene->create_world(mw, "1");
 
         // TMP wait for keoo
-        QVector<WGObject *> objects;
-        WGObject *obj = new WGObject();
-        obj->setName("/tmp/WarriorOfGujoong-tiles/fighter");
-        obj->setPosition(Position(5, 5, 0));
+        QVector<Perso *> objects;
+        Perso *obj = new Perso();
+        obj->set_name("/tmp/WarriorOfGujoong-tiles/fighter");
+        obj->set_position(Position(5, 5, 0));
         objects.push_back(obj);
-        obj = new WGObject();
-        obj->setName("/tmp/WarriorOfGujoong-tiles/princess");
-        obj->setPosition(Position(6, 5, 0));
+        obj = new Perso();
+        obj->set_name("/tmp/WarriorOfGujoong-tiles/princess");
+        obj->set_position(Position(6, 5, 0));
         objects.push_back(obj);
         _scene->add_objects(objects);
         // End TMP

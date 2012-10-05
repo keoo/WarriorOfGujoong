@@ -10,12 +10,15 @@
 
 #include "WGObject.hpp"
 #include "PState.hpp"
+#include "Item.hpp"
 
 /**
  * \brief Root class for all personnages
  * \class Perso
  */
 class Perso : public WGObject {
+    Q_OBJECT
+
 public :
   /**
    * \brief Default constructor
@@ -38,10 +41,11 @@ public :
   /**
    * \brief Constructor
    */
-  Perso(double HP = 0.0, double MP = 0.0,
+  Perso(std::string name,
+        double HP = 0.0, double MP = 0.0,
 	double strength = 0.0, double power = 0.0,
-	double def = 0.0, double mr = 0.0, 
-	double luck = 0.0, int lvl = 0, int mob = 0, 
+	double def = 0.0, double mr = 0.0,
+	double luck = 0.0, int lvl = 0, int mob = 0,
 	std::vector<PState> state = std::vector<PState>(),
 	QObject* obj = 0);
   /**
@@ -114,7 +118,7 @@ public :
   double
   get_strength();
   /**
-   * \brief Get power 
+   * \brief Get power
    */
   double
   get_power();
@@ -143,15 +147,91 @@ public :
    */
   int
   inc_level();
+  /**
+   * \brief Get the shield
+   */
+  Item&
+  get_shield();
+  /**
+   * \brief Set the shield
+   */
+  void
+  set_shield(Item& shield);
+  /**
+   * \brief Get the weapon
+   */
+  Item&
+  get_weapon();
+  /**
+   * \brief Set the weapon
+   */
+  void
+  set_weapon(Item& weapon);
+  /**
+   * \brief Get current XP
+   */
+  int
+  get_XP();
+  /**
+   * \brief Get total XP
+   */
+  int
+  get_max_XP();
+  /**
+   * \brief Set current XP
+   */
+  void
+  set_XP(int val);
+  /**
+   * \brief Set total XP
+   */
+  void
+  set_max_XP(int val);
+  /**
+   * \brief Increase current XP
+   */
+  void
+  inc_XP(int val);
+  /**
+   * \brief Increase total XP
+   */
+  void
+  inc_max_XP(int val);
+  /**
+   * \brief Get the states of the perso
+   */
+  std::vector<PState>
+  get_states();
+  /**
+   * \brief Add a state to the perso
+   */
+  void
+  add_state(PState state);
+  /**
+   * \brief Remove a state to the perso
+   */
+  void
+  remove_state(PState state);
+  /**
+   * \brief Remove all bad state to the perso
+   */
+  void
+  clear_states();
+
+  /**
+   * \brief Return true if the perso has moved for this turn
+   */
+  bool has_moved() const;
+
 protected :
   /**
    * \brief Level of the char
    */
-  int  level;
+  int  _lvl;
   /**
    * \brief Mobility of the perso
    */
-  int _mobility;
+  int _mob;
   /**
    * \brief Heal of the perso
    */
@@ -181,7 +261,37 @@ protected :
    */
   double _luck;
   /**
-   * \brief
+   * \brief The states of the perso
    */
-  std::vector<PState> _state;
+  std::vector<PState> _states;
+  /**
+   * \brief The shield
+   */
+  Item _shield;
+  /**
+   * \brief The weapon
+   */
+  Item _weapon;
+  /**
+   * \brief Current XP
+   */
+  int _xp;
+  /**
+   * \brief Total XP
+   */
+  int _max_xp;
+
+  /**
+   * \brief if the perso has moved for this turn
+   */
+  bool _has_moved;
+
+public slots:
+  /**
+   * \brief slot_set_has_moved
+   * Called when the animation of the moving perso is finished
+   */
+  void slot_set_has_moved(bool);
 };
+
+#endif

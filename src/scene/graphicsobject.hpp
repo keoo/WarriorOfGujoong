@@ -1,31 +1,35 @@
 #ifndef GRAPHICSOBJECT_HPP
 #define GRAPHICSOBJECT_HPP
 
-#include <QGraphicsPixmapItem>
 #include <QGraphicsItemGroup>
 #include <QTimer>
 
-#include "computemoves.hpp"
+#include "util/direction.hpp"
 
-#include "core/WGObject.hpp"
+class MoveAction;
+class Perso;
 
-struct ImageGroup {
+/**
+ * Contains the list of images for one direction
+ * And the current image of the animation.
+ */
+struct ImageAnimation {
     int _current_img;
     QList<QGraphicsPixmapItem *> _items;
 };
+
 
 class GraphicsObject : public QObject, public QGraphicsItemGroup
 {
     Q_OBJECT
 
 public:
-    GraphicsObject(WGObject *obj);
+    GraphicsObject(Perso *obj);
     ~GraphicsObject();
 
     enum { Type = UserType + 4 };
 
-    int type() const
-    {
+    int type() const {
         // Enable the use of qgraphicsitem_cast with this item.
         return Type;
     }
@@ -36,29 +40,32 @@ public:
 
     void set_selected(bool select);
 
-    WGObject *get_object() const;
-
-    MoveAction *_actions;
+    Perso *get_object() const;
 
 private:
-    WGObject *_obj;
+    // The perso data for this graphic object
+    Perso *_perso;
 
-    QMap<Direction, QSharedPointer<ImageGroup> > _pixmaps;
+    // For each direction, the corresponding images
+    QMap<Direction, QSharedPointer<ImageAnimation> > _pixmaps;
 
+    // The current pixmap displayed
     QGraphicsPixmapItem *_current_pixmap;
 
-    // has move
+    // Corresponds to the icon for the status : red means the perso has moved else it is green
     QGraphicsEllipseItem *_status;
 
+    // Box telling that the perso is selected
     QGraphicsRectItem *_selected_item_box;
 
-    bool _has_move;
-
-    std::string _current_image_name;
-
+    // Timer for the animation
     QTimer _move_timer;
 
+    // Moves to do during the animation
+    MoveAction *_actions;
+
 public slots:
+    // Slot call by the timer to update the animation
     void updateAnimation();
 
     /**
@@ -71,7 +78,8 @@ public slots:
     void slot_perso_has_move(bool has_moved);
 
 signals:
-    void signal_finish_moved();
+    // Signal throw when the animation is finished
+    void signal_finish_moved(bool);
 
 };
 

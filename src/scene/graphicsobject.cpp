@@ -1,7 +1,3 @@
-#include "computemoves.hpp"
-
-#include "graphicsobject.hpp"
-
 #include <QBrush>
 #include <QPen>
 #include <QTimer>
@@ -9,28 +5,33 @@
 #include <QGraphicsView>
 #include <QFile>
 #include <iostream>
+/* -- */
+#include "computemoves.hpp"
+/* -- */
+#include "core/Perso.hpp"
+/* -- */
+#include "scene/graphicsobject.hpp"
 
 static const int UPDATE_PERIOD = 200;
 
-GraphicsObject::GraphicsObject(WGObject *obj) : QObject(), _obj(obj)
-{
-
+GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
     // Get images depending on the name
     QStringList direction_list;
     direction_list << "haut" << "bas" << "gauche" << "droite";
-    for(int i = 0 ; i < direction_list.size() ; i ++) {
+    for(int i = 0 ; i < direction_list.size() ; ++ i) {
         // For each direction, we create a list of images
-        QSharedPointer<ImageGroup> img(new ImageGroup());
+        QSharedPointer<ImageAnimation> img(new ImageAnimation());
         img.data()->_current_img = 0;
         int tile_id = 0;
         bool file_exists = true;
+        // Load image for this direction while files exist for this direction
         while(file_exists) {
             // Check for next file
             const QString filename = QString::fromStdString(obj->get_name()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
 
             if(QFile::exists(filename)) {
                 // File exists, we load the pixmap
-                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(16, 16), this));
+                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(48, 48), this));
                 img.data()->_items.last()->setVisible(false);
             }
             else {
@@ -48,9 +49,8 @@ GraphicsObject::GraphicsObject(WGObject *obj) : QObject(), _obj(obj)
     _current_pixmap->setVisible(true);
     addToGroup(_current_pixmap);
 
-    _status = new QGraphicsEllipseItem(this);
-
     // Draw ellipsis on the bottom right of the perso
+    _status = new QGraphicsEllipseItem(this);
     const int w =  _current_pixmap->pixmap().size().width();
     const int size_ellipse = w/4;
     _status->setRect(w-size_ellipse, w-size_ellipse, size_ellipse, size_ellipse);
@@ -62,14 +62,20 @@ GraphicsObject::GraphicsObject(WGObject *obj) : QObject(), _obj(obj)
     _selected_item_box->setPen(QPen(QBrush(QColor(Qt::yellow)), 1));
     _selected_item_box->setVisible(false);
 
+    // Connect animation timer
     connect(&_move_timer, SIGNAL(timeout()), this, SLOT(updateAnimation()));
 
-    // TODO Connect slot_perso_has_move to signal from Perso
-    //connect(&_perso, SIGNAL(move(bool)), this, SLOT(slot_perso_has_move(bool)));
+    // Connect slot_perso_has_move to signal from Perso
+    connect(this, SIGNAL(signal_finish_moved(bool)), _perso, SLOT(slot_set_has_moved(bool)));
+    connect(this, SIGNAL(signal_finish_moved(bool)), this, SLOT(slot_perso_has_move(bool)));
 }
 
 GraphicsObject::~GraphicsObject()
 {
+}
+
+Perso *GraphicsObject::get_object() const {
+    return _perso;
 }
 
 void GraphicsObject::move_object_to(const QPointF &new_pos)
@@ -83,9 +89,7 @@ void GraphicsObject::move_object_to(const QPointF &new_pos)
 
 bool GraphicsObject::has_moved() const
 {
-    // TODO
-    // return _perso.has_moved();
-    return _has_move;
+    return _perso->has_moved();
 }
 
 void GraphicsObject::set_selected(bool select)
@@ -101,7 +105,6 @@ void GraphicsObject::slot_perso_has_move(bool has_moved)
     else {
         _status->setBrush(QBrush(QColor(Qt::green)));
     }
-
 }
 
 void GraphicsObject::updateAnimation()
@@ -111,7 +114,6 @@ void GraphicsObject::updateAnimation()
 
     if(!zoom) {
         zoom = true;
-
         scene()->views().at(0)->scale(scaleFactor, scaleFactor);
     }
 
@@ -126,15 +128,16 @@ void GraphicsObject::updateAnimation()
         _current_pixmap->setVisible(true);
 
         // Restart all pixmap counters
-        QMap<Direction, QSharedPointer<ImageGroup> >::iterator i = _pixmaps.begin();
+        QMap<Direction, QSharedPointer<ImageAnimation> >::iterator i = _pixmaps.begin();
         while (i != _pixmaps.end()) {
-            ImageGroup * val = i.value().data();
+            ImageAnimation * val = i.value().data();
             val->_current_img = 0;
             ++i;
         }
 
-
         _move_timer.stop();
+        emit(signal_finish_moved(true));
+
         ComputeMoves::release_moves(_actions);
         _actions = NULL;
 

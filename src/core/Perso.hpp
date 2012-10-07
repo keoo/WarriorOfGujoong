@@ -17,6 +17,8 @@
  * \class Perso
  */
 class Perso : public WGObject {
+    Q_OBJECT
+
 public :
   /**
    * \brief Default constructor
@@ -215,6 +217,12 @@ public :
    */
   void
   clear_states();
+
+  /**
+   * \brief Return true if the perso has moved for this turn
+   */
+  bool has_moved() const;
+
 protected :
   /**
    * \brief Level of the char
@@ -272,6 +280,18 @@ protected :
    * \brief Total XP
    */
   int _max_xp;
+
+  /**
+   * \brief if the perso has moved for this turn
+   */
+  bool _has_moved;
+
+public slots:
+  /**
+   * \brief slot_set_has_moved
+   * Called when the animation of the moving perso is finished
+   */
+  void slot_set_has_moved(bool);
 };
 
 #endif

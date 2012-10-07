@@ -4,10 +4,19 @@
 #include <QGraphicsScene>
 #include <QPointer>
 #include <QVector>
-#include "core/WGObject.hpp"
-#include "modelworld.h"
 
+class ModelWorld;
+class ModelArea;
 class GraphicsObject;
+class ActionMenuWindow;
+class Perso;
+
+enum ActionState {
+    WAITING,
+    MOVING,
+    END_MOVING,
+    ATTACKING
+};
 
 class GraphicsScene : public QGraphicsScene
 {
@@ -20,10 +29,8 @@ public:
     // Sets the map as current map. Does not free the memory used by the old map.
     void create_world(ModelWorld *new_model_world, const QString &world_name);
 
-    // TMP wait for keoo
-    void add_objects(const QVector<WGObject *> objects);
-    // End TMP
-
+    // TODO load from files
+    void add_objects(const QVector<Perso *> objects);
 
     void select_object(GraphicsObject *item);
     void unselect_object();
@@ -36,12 +43,19 @@ protected:
     void keyPressEvent(QKeyEvent *event);
 
 private:
+
+    ActionState _current_state;
+
     // Data of the current map
     ModelWorld *_current_map;
 
     QGraphicsRectItem *_cursor_position;
 
     GraphicsObject *_selected_item;
+
+    QGraphicsPixmapItem *_attack_item;
+
+    ActionMenuWindow *_action_menu;
 
     // Creates the graphical items of the map and display them according to their position
     void create_map(const QSharedPointer<ModelArea> &area);
@@ -53,14 +67,20 @@ private:
 
     void move_action(const QPointF &new_pos);
 
+    void move_attack_sword(const QPointF &new_pos);
+
     bool finish_turn();
+
+    void move_finished();
 
 signals:
     void signal_end_of_turn();
-    void signal_perso_mouse_hovered(/* Perso * */);
+    void signal_perso_mouse_hovered(Perso *perso);
     void signal_perso_mouse_quit_hovered();
+
 public slots:
-    
+    void propose_end_of_move_action();
+
 };
 
 #endif // GRAPHICSSCENE_HPP

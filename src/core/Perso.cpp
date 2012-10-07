@@ -260,3 +260,12 @@ Perso::clear_states(){
   }
 }
 
+bool
+Perso::has_moved() const{
+    return _has_moved;
+}
+
+void
+Perso::slot_set_has_moved(bool move){
+    _has_moved = move;
+}

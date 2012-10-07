@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->main_view->setScene(_scene);
 
-    ui->main_view->scale(2, 2);
+    //ui->main_view->scale(1, 1);
 
     setMinimumSize(800, 600);
 
@@ -49,12 +49,20 @@ void MainWindow::on_action_load_game_triggered() {
         // TMP wait for keoo
         QVector<Perso *> objects;
         Perso *obj = new Perso();
-        obj->set_name("/tmp/WarriorOfGujoong-tiles/fighter");
-        obj->set_position(Position(5, 5, 0));
+        obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/chun");
+        obj->set_position(Position(1, 4, 0));
         objects.push_back(obj);
         obj = new Perso();
-        obj->set_name("/tmp/WarriorOfGujoong-tiles/princess");
-        obj->set_position(Position(6, 5, 0));
+        obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/kyle");
+        obj->set_position(Position(2, 4, 0));
+        objects.push_back(obj);
+        obj = new Perso();
+        obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/ryan");
+        obj->set_position(Position(3, 4, 0));
+        objects.push_back(obj);
+        obj = new Perso();
+        obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/unknown");
+        obj->set_position(Position(17, 4, 0));
         objects.push_back(obj);
         _scene->add_objects(objects);
         // End TMP

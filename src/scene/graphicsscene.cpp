@@ -1,6 +1,6 @@
 #include <map>
 #include <iostream>
-
+/* -- */
 #include <QGraphicsPixmapItem>
 #include <QString>
 #include <QSharedPointer>
@@ -9,21 +9,20 @@
 #include <QMessageBox>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
-
-#include "core/Perso.hpp"
-
-#include "modelarea.h"
-#include "modelworld.h"
-
-#include "scene/graphicsscene.hpp"
-#include "scene/actionmenuwindow.hpp"
-
-#include "scene/graphicsobject.hpp"
-
 /* -- translation -- */
 #include "constants/ChainConstants.hpp"
+/* -- */
+#include "core/Perso.hpp"
+/* -- */
+#include "modelarea.h"
+#include "modelworld.h"
+/* -- */
+#include "scene/graphicsobject.hpp"
+#include "scene/actionmenuwindow.hpp"
+#include "scene/graphicsscene.hpp"
+/* -- */
 
-#define TILE_SIZE 16
+#define TILE_SIZE 48
 
 GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent), _current_state(WAITING), _current_map(NULL), _cursor_position(new QGraphicsRectItem()), _selected_item(NULL),
@@ -338,7 +337,7 @@ bool has_ennemi_perso_around(const QPointF &) {
 void GraphicsScene::propose_end_of_move_action() {
     // Do action (spells if possible, fight if possible, nothing (always possible))
     QStringList possible_actions;
-    if(0/*TODO _selected_item->get_object()->has_spells()*/) {
+    if(1/*TODO _selected_item->get_object()->has_spells()*/) {
         possible_actions.push_back(Constants::MAGIC);
     }
     if(has_ennemi_perso_around(_cursor_position->pos())) {

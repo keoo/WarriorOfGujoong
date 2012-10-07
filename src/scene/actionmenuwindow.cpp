@@ -1,8 +1,8 @@
-#include "actionmenuwindow.hpp"
-
 #include <QKeyEvent>
 #include <QRadioButton>
 #include <QVBoxLayout>
+/* -- */
+#include "actionmenuwindow.hpp"
 
 ActionMenuWindow::ActionMenuWindow(QWidget *parent) : QDialog(parent) {
     setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);

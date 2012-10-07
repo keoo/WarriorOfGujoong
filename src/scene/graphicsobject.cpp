@@ -31,7 +31,7 @@ GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
 
             if(QFile::exists(filename)) {
                 // File exists, we load the pixmap
-                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(16, 16), this));
+                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(48, 48), this));
                 img.data()->_items.last()->setVisible(false);
             }
             else {

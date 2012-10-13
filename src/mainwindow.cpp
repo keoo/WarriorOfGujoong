@@ -1,13 +1,15 @@
-#include "scene/graphicsscene.hpp"
+#include <QMessageBox>
+/* -- */
+#include "core/Perso.hpp"
+/* -- */
 #include "modelworld.h"
-
+#include "scene/graphictile.hpp"
+#include "scene/graphicsscene.hpp"
+/* -- */
+#include "persostatistics.hpp"
+/* -- */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
-#include <QMessageBox>
-#include "persostatistics.hpp"
-
-#include "core/Perso.hpp"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),ui(new Ui::MainWindow), _scene(new GraphicsScene())
@@ -17,8 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->main_view->setMouseTracking(true);
 
     ui->main_view->setScene(_scene);
-
-    //ui->main_view->scale(1, 1);
 
     setMinimumSize(800, 600);
 
@@ -51,19 +51,28 @@ void MainWindow::on_action_load_game_triggered() {
         Perso *obj = new Perso();
         obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/chun");
         obj->set_position(Position(1, 4, 0));
+        obj->set_mobility(6);
+        obj->slot_reset_has_moved();
         objects.push_back(obj);
         obj = new Perso();
         obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/kyle");
         obj->set_position(Position(2, 4, 0));
+        obj->set_mobility(4);
+        obj->slot_reset_has_moved();
         objects.push_back(obj);
         obj = new Perso();
         obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/ryan");
         obj->set_position(Position(3, 4, 0));
+        obj->set_mobility(3);
+        obj->slot_reset_has_moved();
         objects.push_back(obj);
         obj = new Perso();
         obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/unknown");
         obj->set_position(Position(17, 4, 0));
+        obj->slot_reset_has_moved();
+        obj->set_mobility(5);
         objects.push_back(obj);
+
         _scene->add_objects(objects);
         // End TMP
     }

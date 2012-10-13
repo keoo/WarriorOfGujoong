@@ -288,10 +288,24 @@ protected :
 
 public slots:
   /**
-   * \brief slot_set_has_moved
-   * Called when the animation of the moving perso is finished
+   * @brief slot_set_has_moved
    */
-  void slot_set_has_moved(bool);
+  void slot_set_has_moved();
+  /**
+   * @brief slot_reset_has_moved
+   */
+  void slot_reset_has_moved();
+
+private:
+  /**
+   * @brief set_has_moved
+   * @param mv
+   * Emits a signal telling that the perso has moved for this turn
+   */
+  void  set_moved(bool mv);
+
+signals:
+  void signal_set_has_moved(bool);
 };
 
 #endif

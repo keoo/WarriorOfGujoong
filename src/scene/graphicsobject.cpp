@@ -6,6 +6,8 @@
 #include <QFile>
 #include <iostream>
 /* -- */
+#include "scene/graphictile.hpp"
+/* -- */
 #include "computemoves.hpp"
 /* -- */
 #include "core/Perso.hpp"
@@ -65,9 +67,8 @@ GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
     // Connect animation timer
     connect(&_move_timer, SIGNAL(timeout()), this, SLOT(updateAnimation()));
 
-    // Connect slot_perso_has_move to signal from Perso
-    connect(this, SIGNAL(signal_finish_moved(bool)), _perso, SLOT(slot_set_has_moved(bool)));
-    connect(this, SIGNAL(signal_finish_moved(bool)), this, SLOT(slot_perso_has_move(bool)));
+    // Connection between the graphical object and the data
+    connect(_perso, SIGNAL(signal_set_has_moved(bool)), this, SLOT(slot_perso_has_move(bool)));
 }
 
 GraphicsObject::~GraphicsObject()
@@ -85,6 +86,8 @@ void GraphicsObject::move_object_to(const QPointF &new_pos)
     _actions = ComputeMoves::create_moves(pos(), new_pos);
 
     _move_timer.start(UPDATE_PERIOD);
+
+    _perso->slot_set_has_moved();
 }
 
 bool GraphicsObject::has_moved() const
@@ -136,7 +139,6 @@ void GraphicsObject::updateAnimation()
         }
 
         _move_timer.stop();
-        emit(signal_finish_moved(true));
 
         ComputeMoves::release_moves(_actions);
         _actions = NULL;

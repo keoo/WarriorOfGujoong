@@ -6,6 +6,7 @@
 #include <QSharedPointer>
 #include <QPixmap>
 #include <QSize>
+#include <QVector>
 #include <QMessageBox>
 #include <QGraphicsSceneMouseEvent>
 #include <QKeyEvent>
@@ -18,7 +19,10 @@
 #include "modelworld.h"
 /* -- */
 #include "scene/graphicsobject.hpp"
+#include "scene/graphictile.hpp"
 #include "scene/actionmenuwindow.hpp"
+#include "computemoves.hpp"
+/* -- */
 #include "scene/graphicsscene.hpp"
 /* -- */
 
@@ -38,9 +42,11 @@ GraphicsScene::~GraphicsScene() {
 
 void GraphicsScene::free_data() {
     _current_state = WAITING;
+
+    _tilesData.clear();
+
     // Remove previous one
-    delete _current_map;
-    _current_map = NULL;
+    _current_map.clear();
     _selected_item = NULL;
     if(_cursor_position->scene() != NULL) {
         removeItem(_cursor_position);
@@ -52,18 +58,16 @@ void GraphicsScene::free_data() {
     clear();
 }
 
-void GraphicsScene::create_world(ModelWorld *new_model_world, const QString &world_name)
+void GraphicsScene::create_world(ModelWorld *model_world, const QString &world_name)
 {
     free_data();
 
-    // Set the new one
-    _current_map = new_model_world;
-
-    const std::map<QString, QSharedPointer<ModelArea> > &model_area = _current_map->get_modelarea_map();
+    const std::map<QString, QSharedPointer<ModelArea> > &model_area = model_world->get_modelarea_map();
 
     if(model_area.find(world_name) != model_area.end()) {
+        _current_map = model_area.at(world_name);
         qDebug("Map found");
-        create_map(model_area.at(world_name));
+        create_map(_current_map);
         // TODO Set to tile size
         _cursor_position->setRect(0, 0, TILE_SIZE, TILE_SIZE);
         addItem(_cursor_position);
@@ -78,7 +82,7 @@ void GraphicsScene::create_world(ModelWorld *new_model_world, const QString &wor
     }
 }
 
-// TMP wait for keoo
+// TMP
 void GraphicsScene::add_objects(const QVector<Perso *> objects) {
     // TODO Connect end of turn signal with all persos
     foreach(Perso *obj, objects) {
@@ -88,6 +92,10 @@ void GraphicsScene::add_objects(const QVector<Perso *> objects) {
         graphicObject->setZValue(10);
 
         addItem(graphicObject);
+        _persos.push_back(graphicObject);
+
+        // Signal/slot connections
+        connect(this, SIGNAL(signal_end_of_turn()), obj, SLOT(slot_reset_has_moved()));
     }
 }
 // End TMP
@@ -97,17 +105,20 @@ void GraphicsScene::create_map(const QSharedPointer <ModelArea> &area)  {
     const int map_height = area->get_height();
 
     const std::vector < std::vector<QSharedPointer<QPixmap> > > &tiles = area->get_tiles_grid();
-
     for(int i = 0 ; i < map_width ; ++ i) {
+        QVector<QSharedPointer<GraphicTile> > lineTiles;
         for(int j = 0 ; j < map_height ; ++ j) {
+
             const QPixmap *tile = (tiles[i][j]).data();
+
             const QSize &size = tile->size();
             // add the tile to the scene at the good position
-            QGraphicsPixmapItem *item = new QGraphicsPixmapItem(*tile);
-            addItem(item);
-            item->setZValue(0);
-            item->moveBy(i*size.width(), j*size.height());
+            QSharedPointer<GraphicTile> graphicTile(new GraphicTile(tile));
+            lineTiles.push_back(graphicTile);
+            addItem(graphicTile.data());
+            graphicTile.data()->moveBy(i*size.width(), j*size.height());
         }
+        _tilesData.push_back(lineTiles);
     }
 }
 
@@ -139,8 +150,8 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
         switch(event->key()) {
         case Qt::Key_Escape:
             if(finish_turn()) {
-                // TODO Reinit object turns
                 // TODO Change current player
+                // Reinit perso moves
                 emit signal_end_of_turn();
             }
             break;
@@ -224,6 +235,7 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
 }
 
 void GraphicsScene::click_action(const QPointF &pos) {
+    // If an object is selected, this is the end of the move
     if(has_selected_object()) {
         QPointF point_pos;
         point_pos.setX(((int)pos.x() / TILE_SIZE) * TILE_SIZE);
@@ -236,6 +248,12 @@ void GraphicsScene::click_action(const QPointF &pos) {
         // disable using any key or mouse
         _current_state = MOVING;
 
+        // Reset the tiles
+        for (int i = 0 ; i < _tilesData.size() ; ++ i) {
+            for (int j = 0 ; j < _tilesData[i].size() ; ++ j) {
+                _tilesData[i][j].data()->set_walkable(true);
+            }
+        }
     }
     else {
         // Look if there is a perso at the position
@@ -244,6 +262,9 @@ void GraphicsScene::click_action(const QPointF &pos) {
             if(perso && !perso->has_moved()) {
                 // Select the perso
                 select_object(qgraphicsitem_cast<GraphicsObject *>(perso));
+
+                // Compute visibility to move
+                ComputeMoves::compute_visibility(_tilesData, perso, _persos);
             }
         }
     }

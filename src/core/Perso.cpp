@@ -265,7 +265,18 @@ Perso::has_moved() const{
     return _has_moved;
 }
 
+void Perso::set_moved(bool mv)
+{
+    _has_moved = mv;
+    emit signal_set_has_moved(_has_moved);
+}
+
 void
-Perso::slot_set_has_moved(bool move){
-    _has_moved = move;
+Perso::slot_set_has_moved(){
+    set_moved(true);
+}
+
+void
+Perso::slot_reset_has_moved(){
+    set_moved(false);
 }

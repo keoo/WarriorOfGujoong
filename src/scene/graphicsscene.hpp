@@ -4,6 +4,8 @@
 #include <QGraphicsScene>
 #include <QPointer>
 #include <QVector>
+/* -- */
+#include "scene/graphictile.hpp"
 
 class ModelWorld;
 class ModelArea;
@@ -47,7 +49,12 @@ private:
     ActionState _current_state;
 
     // Data of the current map
-    ModelWorld *_current_map;
+    QSharedPointer<ModelArea> _current_map;
+
+    QVector<QVector<QSharedPointer<GraphicTile> > > _tilesData;
+
+    // Data for persos
+    QVector<GraphicsObject *> _persos;
 
     QGraphicsRectItem *_cursor_position;
 

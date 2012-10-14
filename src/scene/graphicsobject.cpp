@@ -15,6 +15,7 @@
 #include "scene/graphicsobject.hpp"
 
 static const int UPDATE_PERIOD = 200;
+#define TILE_SIZE 48
 
 GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
     // Get images depending on the name
@@ -33,7 +34,7 @@ GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
 
             if(QFile::exists(filename)) {
                 // File exists, we load the pixmap
-                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(48, 48), this));
+                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(TILE_SIZE, TILE_SIZE), this));
                 img.data()->_items.last()->setVisible(false);
             }
             else {
@@ -88,6 +89,9 @@ void GraphicsObject::move_object_to(const QPointF &new_pos)
     _move_timer.start(UPDATE_PERIOD);
 
     _perso->slot_set_has_moved();
+    // Set new position to the data
+    _perso->set_position(Position(new_pos.x()/TILE_SIZE, new_pos.y()/TILE_SIZE, 0.));
+
 }
 
 bool GraphicsObject::has_moved() const

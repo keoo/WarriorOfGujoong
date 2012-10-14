@@ -11,6 +11,9 @@
 /* -- */
 #include "computemoves.hpp"
 
+#define INFINITY 100000
+
+
 ComputeMoves::ComputeMoves()
 {
 }
@@ -93,8 +96,6 @@ struct TileMM {
     int mob;
     TileMM *prev;
 };
-
-#define INFINITY 100000
 
 void ComputeMoves::compute_visibility(QVector<QVector<QSharedPointer<GraphicTile> > > &area, const GraphicsObject *perso, const QVector<GraphicsObject *> &persos)
 {

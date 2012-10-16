@@ -27,7 +27,9 @@ SOURCES += main.cpp\
     computemoves.cpp \
     persostatistics.cpp \
     scene/actionmenuwindow.cpp \
-    scene/graphictile.cpp
+    scene/graphictile.cpp \
+    core/player.cpp \
+    core/leveldata.cpp
 
 HEADERS  += mainwindow.h \
         scene/graphicsscene.hpp \
@@ -44,7 +46,9 @@ HEADERS  += mainwindow.h \
     scene/actionmenuwindow.hpp \
     constants/ChainConstants.hpp \
     util/direction.hpp \
-    scene/graphictile.hpp
+    scene/graphictile.hpp \
+    core/player.hpp \
+    core/leveldata.hpp
 
 FORMS    += mainwindow.ui \
     persostatistics.ui

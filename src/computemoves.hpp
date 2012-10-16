@@ -15,6 +15,13 @@ struct Move {
     Direction sens;
 };
 
+struct TileMM {
+    int x;
+    int y;
+    int mob;
+    TileMM *prev;
+};
+
 class MoveAction {
 public:
     MoveAction() : _current_move(0){}
@@ -32,8 +39,10 @@ class ComputeMoves
 private:
     ComputeMoves();
 
+    static std::vector < std::vector<TileMM *> > _current_moves;
+
 public:
-    static MoveAction *create_moves(const QPointF &pos_init, const QPointF &pos_fin);
+    static MoveAction *create_moves(const QPointF &begin_pos, const QPointF &end_pos);
 
     static void release_moves(MoveAction *mv_action);
 

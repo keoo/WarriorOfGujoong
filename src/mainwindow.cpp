@@ -1,6 +1,9 @@
+#include <QList>
 #include <QMessageBox>
 /* -- */
 #include "core/Perso.hpp"
+#include "core/player.hpp"
+#include "core/leveldata.hpp"
 /* -- */
 #include "modelworld.h"
 #include "scene/graphictile.hpp"
@@ -44,10 +47,8 @@ void MainWindow::on_action_load_game_triggered() {
     qDebug("Load a game");
     ModelWorld *mw = new ModelWorld("World.xml");
     try {
-        _scene->create_world(mw, "1");
 
-        // TMP wait for keoo
-        QVector<Perso *> objects;
+        QList<Perso *> objects;
         Perso *obj = new Perso();
         obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/chun");
         obj->set_position(Position(1, 4, 0));
@@ -63,20 +64,44 @@ void MainWindow::on_action_load_game_triggered() {
         obj = new Perso();
         obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/ryan");
         obj->set_position(Position(3, 4, 0));
-        obj->set_mobility(3);
+        obj->set_mobility(5);
         obj->slot_reset_has_moved();
         objects.push_back(obj);
+
+        Player *p1 = new Player;
+        p1->set_persos(objects);
+
+        objects.clear();
         obj = new Perso();
         obj->set_name("/tmp/WarriorOfGujoong-tiles/persos/unknown");
         obj->set_position(Position(17, 4, 0));
         obj->slot_reset_has_moved();
-        obj->set_mobility(5);
+        obj->set_mobility(8);
         objects.push_back(obj);
+        Player *p2 = new Player;
+        p2->set_persos(objects);
 
-        _scene->add_objects(objects);
-        // End TMP
+        QList <Player *> players;
+        players.push_back(p1);
+        players.push_back(p2);
+
+        LevelData *mapData = new LevelData(players, "1");
+
+
+        const std::map<QString, QSharedPointer<ModelArea> > &model_area = mw->get_modelarea_map();
+        const QString &world_name = mapData->get_map_id();
+
+        if(model_area.find(world_name) == model_area.end()) {
+            throw ("map " + world_name + " not found");
+        }
+        else {
+            mapData->set_model_area(model_area.at(world_name));
+        }
+
+        _scene->create_world(mapData);
     }
     catch (const QString &e) {
         QMessageBox::critical(this, "Critical error occured", e);
     }
+    delete mw;
 }

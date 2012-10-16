@@ -14,6 +14,8 @@
 #include "constants/ChainConstants.hpp"
 /* -- */
 #include "core/Perso.hpp"
+#include "core/player.hpp"
+#include "core/leveldata.hpp"
 /* -- */
 #include "modelarea.h"
 #include "modelworld.h"
@@ -46,7 +48,9 @@ void GraphicsScene::free_data() {
     _tilesData.clear();
 
     // Remove previous one
-    _current_map.clear();
+    delete _current_map;
+    _current_map = NULL;
+
     _selected_item = NULL;
     if(_cursor_position->scene() != NULL) {
         removeItem(_cursor_position);
@@ -58,32 +62,31 @@ void GraphicsScene::free_data() {
     clear();
 }
 
-void GraphicsScene::create_world(ModelWorld *model_world, const QString &world_name)
+void GraphicsScene::create_world(LevelData *mapData)
 {
     free_data();
 
-    const std::map<QString, QSharedPointer<ModelArea> > &model_area = model_world->get_modelarea_map();
+    _current_map = mapData;
+    qDebug("Map found");
+    create_map(mapData->get_model_area());
 
-    if(model_area.find(world_name) != model_area.end()) {
-        _current_map = model_area.at(world_name);
-        qDebug("Map found");
-        create_map(_current_map);
-        // TODO Set to tile size
-        _cursor_position->setRect(0, 0, TILE_SIZE, TILE_SIZE);
-        addItem(_cursor_position);
+    // Add players object
+    foreach(Player *player, mapData->get_players())
+    add_objects(player->get_persos());
 
-        addItem(_attack_item);
-        _attack_item->setZValue(110);
-        _attack_item->setVisible(false);
+    // TODO Set to tile size
+    _cursor_position->setRect(0, 0, TILE_SIZE, TILE_SIZE);
+    addItem(_cursor_position);
 
-    }
-    else {
-        throw ("map " + world_name + " not found");
-    }
+    addItem(_attack_item);
+    _attack_item->setZValue(110);
+    _attack_item->setVisible(false);
+
+    connect(this, SIGNAL(signal_end_of_turn()), mapData, SLOT(set_next_player());
 }
 
 // TMP
-void GraphicsScene::add_objects(const QVector<Perso *> objects) {
+void GraphicsScene::add_objects(const QList<Perso *> objects) {
     // TODO Connect end of turn signal with all persos
     foreach(Perso *obj, objects) {
         GraphicsObject *graphicObject = new GraphicsObject(obj);
@@ -241,8 +244,17 @@ void GraphicsScene::click_action(const QPointF &pos) {
         point_pos.setX(((int)pos.x() / TILE_SIZE) * TILE_SIZE);
         point_pos.setY(((int)pos.y() / TILE_SIZE) * TILE_SIZE);
 
+        // If we can not stop on the case, we refuse the event
+        // FIXME Do it with model data
+        const int x = (int)pos.x()/TILE_SIZE;
+        const int y = (int)pos.y()/TILE_SIZE;
+
+        if(!_tilesData[x][y].data()->is_walkable()) {
+            return;
+        }
+
         // Finish the move
-        connect(_selected_item, SIGNAL(signal_finish_moved(bool)), this, SLOT(propose_end_of_move_action()));
+        connect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(propose_end_of_move_action()));
         _selected_item->move_object_to(point_pos);
 
         // disable using any key or mouse
@@ -408,6 +420,6 @@ void GraphicsScene::propose_end_of_move_action() {
 
 void GraphicsScene::move_finished() {
     // Finish the perso action
-    disconnect(_selected_item, SIGNAL(signal_finish_moved(bool)), this, SLOT(propose_end_of_move_action()));
+    disconnect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(propose_end_of_move_action()));
     unselect_object();
 }

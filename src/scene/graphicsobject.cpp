@@ -128,7 +128,7 @@ void GraphicsObject::updateAnimation()
     // Last move
     if(_actions->get_current_move() >= _actions->get_moves()->size()) {
         if(_actions->get_current_move() != 0) {
-            setPos(_actions->get_moves()->at(_actions->get_current_move()-1)->pos_final);
+            //setPos(_actions->get_moves()->at(_actions->get_current_move()-1)->pos_final);
         }
         _current_pixmap->setVisible(false);
         _current_pixmap = _pixmaps[BOTTOM]->_items[0];
@@ -143,6 +143,8 @@ void GraphicsObject::updateAnimation()
         }
 
         _move_timer.stop();
+
+        emit signal_finish_moved();
 
         ComputeMoves::release_moves(_actions);
         _actions = NULL;

@@ -78,8 +78,8 @@ public slots:
     void slot_perso_has_move(bool has_moved);
 
 signals:
-    // Signal throw when the animation is finished
-    void signal_finish_moved(bool);
+    // Send to the scene to tell that the perso has finished to moved (animation is finished) and he can now attack or magic or do nothing
+    void signal_finish_moved();
 
 };
 

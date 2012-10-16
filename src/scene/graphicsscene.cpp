@@ -82,7 +82,7 @@ void GraphicsScene::create_world(LevelData *mapData)
     _attack_item->setZValue(110);
     _attack_item->setVisible(false);
 
-    connect(this, SIGNAL(signal_end_of_turn()), mapData, SLOT(set_next_player());
+    connect(this, SIGNAL(signal_end_of_turn()), mapData, SLOT(set_next_player()));
 }
 
 // TMP

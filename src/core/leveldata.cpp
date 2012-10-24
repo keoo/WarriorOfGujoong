@@ -1,6 +1,6 @@
 #include <QString>
 /* -- */
-#include "modelarea.h"
+#include "core/map_data/modelarea.h"
 #include "player.hpp"
 #include "leveldata.hpp"
 

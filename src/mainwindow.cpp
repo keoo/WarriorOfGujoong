@@ -5,7 +5,7 @@
 #include "core/player.hpp"
 #include "core/leveldata.hpp"
 /* -- */
-#include "modelworld.h"
+#include "core/map_data/modelworld.h"
 #include "scene/graphictile.hpp"
 #include "scene/graphicsscene.hpp"
 /* -- */

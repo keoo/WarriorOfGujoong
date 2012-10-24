@@ -17,8 +17,9 @@
 #include "core/player.hpp"
 #include "core/leveldata.hpp"
 /* -- */
-#include "modelarea.h"
-#include "modelworld.h"
+#include "core/map_data/tiledata.hpp"
+#include "core/map_data/modelarea.h"
+#include "core/map_data/modelworld.h"
 /* -- */
 #include "scene/graphicsobject.hpp"
 #include "scene/graphictile.hpp"
@@ -85,9 +86,7 @@ void GraphicsScene::create_world(LevelData *mapData)
     connect(this, SIGNAL(signal_end_of_turn()), mapData, SLOT(set_next_player()));
 }
 
-// TMP
 void GraphicsScene::add_objects(const QList<Perso *> objects) {
-    // TODO Connect end of turn signal with all persos
     foreach(Perso *obj, objects) {
         GraphicsObject *graphicObject = new GraphicsObject(obj);
 
@@ -98,23 +97,23 @@ void GraphicsScene::add_objects(const QList<Perso *> objects) {
         _persos.push_back(graphicObject);
 
         // Signal/slot connections
+        // Connect end of turn signal with all persos
         connect(this, SIGNAL(signal_end_of_turn()), obj, SLOT(slot_reset_has_moved()));
     }
 }
-// End TMP
 
 void GraphicsScene::create_map(const QSharedPointer <ModelArea> &area)  {
     const int map_width = area->get_width();
     const int map_height = area->get_height();
 
-    const std::vector < std::vector<QSharedPointer<QPixmap> > > &tiles = area->get_tiles_grid();
+    const std::vector < std::vector<QSharedPointer<TileData> > > &tiles = area->get_tiles_grid();
     for(int i = 0 ; i < map_width ; ++ i) {
         QVector<QSharedPointer<GraphicTile> > lineTiles;
         for(int j = 0 ; j < map_height ; ++ j) {
 
-            const QPixmap *tile = (tiles[i][j]).data();
+            TileData *tile = (tiles[i][j]).data();
 
-            const QSize &size = tile->size();
+            const QSize &size = tile->get_pixmap().size();
             // add the tile to the scene at the good position
             QSharedPointer<GraphicTile> graphicTile(new GraphicTile(tile));
             lineTiles.push_back(graphicTile);
@@ -245,11 +244,10 @@ void GraphicsScene::click_action(const QPointF &pos) {
         point_pos.setY(((int)pos.y() / TILE_SIZE) * TILE_SIZE);
 
         // If we can not stop on the case, we refuse the event
-        // FIXME Do it with model data
         const int x = (int)pos.x()/TILE_SIZE;
         const int y = (int)pos.y()/TILE_SIZE;
 
-        if(!_tilesData[x][y].data()->is_walkable()) {
+        if(!_tilesData[x][y].data()->get_tile()->is_walkable_for_action()) {
             return;
         }
 
@@ -263,7 +261,7 @@ void GraphicsScene::click_action(const QPointF &pos) {
         // Reset the tiles
         for (int i = 0 ; i < _tilesData.size() ; ++ i) {
             for (int j = 0 ; j < _tilesData[i].size() ; ++ j) {
-                _tilesData[i][j].data()->set_walkable(true);
+                _tilesData[i][j].data()->get_tile()->set_walkable_for_action(true);
             }
         }
     }
@@ -271,12 +269,13 @@ void GraphicsScene::click_action(const QPointF &pos) {
         // Look if there is a perso at the position
         foreach(QGraphicsItem *it, items(pos)) {
             GraphicsObject *perso = qgraphicsitem_cast<GraphicsObject *>(it);
+            // TODO add condition perso.get_player == current_player
             if(perso && !perso->has_moved()) {
                 // Select the perso
                 select_object(qgraphicsitem_cast<GraphicsObject *>(perso));
 
                 // Compute visibility to move
-                ComputeMoves::compute_visibility(_tilesData, perso, _persos);
+                ComputeMoves::compute_visibility(_current_map->get_model_area(), perso, _persos);
             }
         }
     }

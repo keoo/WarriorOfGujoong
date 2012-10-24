@@ -16,39 +16,41 @@ DESTDIR=./
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-        scene/graphicsscene.cpp \
-        modelarea.cpp \
-        modelworld.cpp \
+        core/map_data/tiledata.cpp \
+        core/map_data/modelarea.cpp \
+        core/map_data/modelworld.cpp \
         core/WGObject.cpp \
         core/Position.cpp \
         core/Perso.cpp \
         core/Item.cpp \
-    scene/graphicsobject.cpp \
-    computemoves.cpp \
-    persostatistics.cpp \
-    scene/actionmenuwindow.cpp \
-    scene/graphictile.cpp \
-    core/player.cpp \
-    core/leveldata.cpp
+        core/player.cpp \
+        core/leveldata.cpp \
+        scene/graphicsobject.cpp \
+        scene/graphicsscene.cpp \
+        computemoves.cpp \
+        persostatistics.cpp \
+        scene/actionmenuwindow.cpp \
+        scene/graphictile.cpp
 
 HEADERS  += mainwindow.h \
-        scene/graphicsscene.hpp \
-        modelarea.h \
-        modelworld.h \
+        constants/ChainConstants.hpp \
+        util/direction.hpp \
+        core/map_data/tiledata.hpp \
+        core/map_data/modelarea.h \
+        core/map_data/modelworld.h \
         core/WGObject.hpp \
         core/Position.hpp \
         core/Item.hpp \
         core/Perso.hpp \
         core/PState.hpp \
-    scene/graphicsobject.hpp \
-    computemoves.hpp \
-    persostatistics.hpp \
-    scene/actionmenuwindow.hpp \
-    constants/ChainConstants.hpp \
-    util/direction.hpp \
-    scene/graphictile.hpp \
-    core/player.hpp \
-    core/leveldata.hpp
+        core/player.hpp \
+        core/leveldata.hpp \
+        scene/graphicsobject.hpp \
+        scene/graphicsscene.hpp \
+        computemoves.hpp \
+        persostatistics.hpp \
+        scene/actionmenuwindow.hpp \
+        scene/graphictile.hpp
 
 FORMS    += mainwindow.ui \
     persostatistics.ui

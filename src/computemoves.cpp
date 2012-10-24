@@ -2,12 +2,12 @@
 /* -- */
 #include <QVector>
 /* -- */
-#include "modelworld.h"
+#include "core/map_data/tiledata.hpp"
+#include "core/map_data/modelworld.h"
 /* -- */
 #include "core/Perso.hpp"
 /* -- */
 #include "scene/graphicsobject.hpp"
-#include "scene/graphictile.hpp"
 /* -- */
 #include "computemoves.hpp"
 
@@ -120,8 +120,9 @@ void ComputeMoves::release_moves(MoveAction *mv_action)
     _current_moves.clear();
 }
 
-void ComputeMoves::compute_visibility(QVector<QVector<QSharedPointer<GraphicTile> > > &area, const GraphicsObject *perso, const QVector<GraphicsObject *> &persos)
+void ComputeMoves::compute_visibility(QSharedPointer<ModelArea> &model, const GraphicsObject *perso, const QVector<GraphicsObject *> &persos)
 {
+    std::vector < std::vector<QSharedPointer<TileData> > > &area = model.data()->get_tiles_grid();
     const int map_width = area.size();
     const int map_height = area[0].size();
 
@@ -146,29 +147,28 @@ void ComputeMoves::compute_visibility(QVector<QVector<QSharedPointer<GraphicTile
         for (int i = 0 ; i < map_width ; i ++) {
             for (int j = 0 ; j < map_height ; j ++) {
 
-                bool can_walk_on_case = (i == 1 && j == 5) ? false : true;
                 // If we can move from the case, we compute if it is better than the current
                 if(_current_moves[i][j]->mob > 0) {
                     if(i-1 >= 0) { // Watch if can go to left case
-                        if(can_walk_on_case /* FIXME can walk on case */ && _current_moves[i-1][j]->mob-1 > _current_moves[i][j]->mob) {
+                        if(area[i-1][j].data()->is_walkable() && _current_moves[i-1][j]->mob-1 > _current_moves[i][j]->mob) {
                             _current_moves[i-1][j]->mob = _current_moves[i][j]->mob - 1; // - case mobilité si on fait des cases avec mobilité différente de 1
                             _current_moves[i-1][j]->prev = _current_moves[i][j];
                         }
                     }
                     if(i+1 < _current_moves.size()) { // Watch if can go to  right case
-                        if(can_walk_on_case /* FIXME can walk on case */ && _current_moves[i+1][j]->mob-1 > _current_moves[i][j]->mob) {
+                        if(area[i+1][j].data()->is_walkable() && _current_moves[i+1][j]->mob-1 > _current_moves[i][j]->mob) {
                             _current_moves[i+1][j]->mob = _current_moves[i][j]->mob - 1; // - case mobilité si on fait des cases avec mobilité différente de 1
                             _current_moves[i+1][j]->prev = _current_moves[i][j];
                         }
                     }
                     if(j-1 >= 0) { // Watch if can go to  top case
-                        if(can_walk_on_case /* FIXME can walk on case */ && _current_moves[i][j-1]->mob-1 > _current_moves[i][j]->mob) {
+                        if(area[i][j-1].data()->is_walkable() && _current_moves[i][j-1]->mob-1 > _current_moves[i][j]->mob) {
                             _current_moves[i][j-1]->mob = _current_moves[i][j]->mob - 1; // - case mobilité si on fait des cases avec mobilité différente de 1
                             _current_moves[i][j-1]->prev = _current_moves[i][j];
                         }
                     }
                     if(j+1 < _current_moves[i].size()) { // Watch if go to from right case
-                        if(can_walk_on_case /* FIXME can walk on case */ && _current_moves[i][j+1]->mob-1 > _current_moves[i][j]->mob) {
+                        if(area[i][j+1].data()->is_walkable() && _current_moves[i][j+1]->mob-1 > _current_moves[i][j]->mob) {
                             _current_moves[i][j+1]->mob = _current_moves[i][j]->mob - 1; // - case mobilité si on fait des cases avec mobilité différente de 1
                             _current_moves[i][j+1]->prev = _current_moves[i][j];
                         }
@@ -184,12 +184,9 @@ void ComputeMoves::compute_visibility(QVector<QVector<QSharedPointer<GraphicTile
     for (int ik = 0 ; ik < map_width ; ik ++) {
         for (int jk = 0 ; jk < map_height ; jk ++) {
             // Set visibility on cases
-            area[ik][jk].data()->set_walkable(_current_moves[ik][jk]->mob >= 0 && _current_moves[ik][jk]->mob != INFINITY);
+            area[ik][jk].data()->set_walkable_for_action(_current_moves[ik][jk]->mob >= 0 && _current_moves[ik][jk]->mob != INFINITY);
         }
     }
-    // TMP
-    area[1][5].data()->set_walkable(false);
-
     // TODO Store the data and do not forget to delete it !
 }
 

@@ -1,10 +1,13 @@
-#include "modelarea.h"
 #include <QDomElement>
 #include <QString>
+#include <map>
+#include <vector>
+#include "core/map_data/tiledata.hpp"
+#include "modelarea.h"
 
 using namespace std;
 
-ModelArea::ModelArea( QDomElement & elt , map < QString, QSharedPointer<QPixmap> > & tiles_map )
+ModelArea::ModelArea(QDomElement & elt , map < QString, QSharedPointer<TileData> > &tiles_map )
 {
     if ( elt.tagName() == "area" && elt.hasAttribute("width") && elt.hasAttribute("height") )
     {
@@ -24,8 +27,8 @@ ModelArea::ModelArea( QDomElement & elt , map < QString, QSharedPointer<QPixmap>
             {
                 int x = QString(child.attribute("x")).toInt();
                 int y = QString(child.attribute("y")).toInt();
-                QSharedPointer<QPixmap> tile ( tiles_map[child.attribute("tileId")] );
-                this->tiles_grid.at(x).at(y)  = tile;
+                QSharedPointer<TileData> tile ( tiles_map[child.attribute("tileId")] );
+                this->tiles_grid.at(x).at(y)  = QSharedPointer<TileData>(new TileData(*tile));
             }
             child = child.nextSibling().toElement();
         }
@@ -46,7 +49,7 @@ int ModelArea::get_height () const
     return this->tiles_grid.size() == 0 ? 0 : this->tiles_grid.at(0).size();
 }
 
-const std::vector < std::vector<QSharedPointer<QPixmap> > > & ModelArea::get_tiles_grid() const
+vector<vector<QSharedPointer<TileData> > > &ModelArea::get_tiles_grid()
 {
     return this->tiles_grid;
 }

@@ -4,7 +4,7 @@
 #include <QPointF>
 #include <QList>
 
-#include "modelarea.h"
+#include "core/map_data/modelarea.h"
 #include "util/direction.hpp"
 
 class GraphicsObject;
@@ -46,10 +46,7 @@ public:
 
     static void release_moves(MoveAction *mv_action);
 
-    static void compute_visibility(QVector<QVector<QSharedPointer<GraphicTile> > > &map, const GraphicsObject *perso, const QVector<GraphicsObject *> &persos);
-    // FIXME Do it from model data !
-    //    static void compute_visibility(QSharedPointer<ModelArea> &map, const GraphicsObject *perso, const QVector<GraphicsObject *> &persos);
-
+    static void compute_visibility(QSharedPointer<ModelArea> &model, const GraphicsObject *perso, const QVector<GraphicsObject *> &persos);
 };
 
 #endif // COMPUTEMOVES_HPP

@@ -1,10 +1,10 @@
-#include "modelworld.h"
-#include "modelarea.h"
-
-#include <qfile.h>
+#include <QFile>
 #include <qdom.h>
-//#include <qapplication.h>
 #include <QPixmap>
+//#include <qapplication.h>
+#include "core/map_data/tiledata.hpp"
+#include "modelarea.h"
+#include "modelworld.h"
 
 #include <iostream>
 using namespace std;
@@ -33,13 +33,13 @@ ModelWorld::ModelWorld(const QString & fileSource)
                 {
                     if (tag_child.tagName() == "tile")
                     {
-                        if ( tag_child.hasAttribute("id") && tag_child.hasAttribute("path") )
+                        if ( tag_child.hasAttribute("id") && tag_child.hasAttribute("path")  && tag_child.hasAttribute("canWalk"))
                         {
                             const QString id (tag_child.attribute("id"));
                             if ( this->_tiles_map.count(id) == 0 )
                             {
-                                QSharedPointer<QPixmap> pix (new QPixmap(tag_child.attribute("path") ));
-                                this->_tiles_map.insert(pair<QString,QSharedPointer<QPixmap> >(id,pix));
+                                QSharedPointer<TileData> pix (new TileData(new QPixmap(tag_child.attribute("path")), tag_child.attribute("canWalk") == "1" ? true : false ));
+                                this->_tiles_map.insert(pair<QString,QSharedPointer<TileData> >(id,pix));
                             }
                         }
                     }
@@ -73,7 +73,7 @@ ModelWorld::ModelWorld(const QString & fileSource)
 
 
 
-const map < QString, QSharedPointer<QPixmap> > & ModelWorld::get_tiles_map() const
+const map < QString, QSharedPointer<TileData> > & ModelWorld::get_tiles_map() const
 {
     return this->_tiles_map;
 }

@@ -2,22 +2,30 @@
 #define GRAPHICTILE_HPP
 
 #include <QGraphicsPixmapItem>
+#include <QObject>
 
-class GraphicTile : public QGraphicsPixmapItem
+class TileData;
+class QGraphicsColorizeEffect;
+
+class GraphicTile : public QObject, public QGraphicsPixmapItem
 {
+    Q_OBJECT
+
 public:
-    // FIXME Change  to GraphicTile(const TileData &tile);
-    GraphicTile(const QPixmap *tile);
+    GraphicTile(TileData *tile);
 
     // You can walk on case where there is people but you can't stop on them
-    void set_walkable(bool value);
     void set_stoppable(bool value);
 
-    // TMP to remove after
-    bool is_walkable() {return _is_walkable;}
-
+    TileData *get_tile();
 private:
-    bool _is_walkable;
+
+    TileData *_tile;
+
+    QGraphicsColorizeEffect *_effect;
+
+public slots:
+    void set_walkable(bool value);
 };
 
 #endif // GRAPHICTILE_HPP

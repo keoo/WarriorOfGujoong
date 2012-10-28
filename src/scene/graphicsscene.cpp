@@ -2,6 +2,7 @@
 #include <iostream>
 /* -- */
 #include <QGraphicsPixmapItem>
+#include <QGraphicsView>
 #include <QString>
 #include <QSharedPointer>
 #include <QPixmap>
@@ -69,11 +70,12 @@ void GraphicsScene::create_world(LevelData *mapData)
 
     _current_map = mapData;
     qDebug("Map found");
-    create_map(mapData->get_model_area());
+    create_map(_current_map->get_model_area());
 
     // Add players object
-    foreach(Player *player, mapData->get_players())
-    add_objects(player->get_persos());
+    foreach(Player *player, _current_map->get_players()) {
+        add_objects(player->get_persos());
+    }
 
     // TODO Set to tile size
     _cursor_position->setRect(0, 0, TILE_SIZE, TILE_SIZE);
@@ -83,7 +85,7 @@ void GraphicsScene::create_world(LevelData *mapData)
     _attack_item->setZValue(110);
     _attack_item->setVisible(false);
 
-    connect(this, SIGNAL(signal_end_of_turn()), mapData, SLOT(set_next_player()));
+    connect(this, SIGNAL(signal_end_of_turn()), _current_map, SLOT(set_next_player()));
 }
 
 void GraphicsScene::add_objects(const QList<Perso *> objects) {
@@ -323,6 +325,8 @@ void GraphicsScene::move_action(const QPointF &new_pos) {
             }
         }
     }
+
+    views()[0]->ensureVisible(_cursor_position);
 }
 
 
@@ -361,9 +365,8 @@ void GraphicsScene::select_object(GraphicsObject *item) {
     }
 }
 
-bool has_ennemi_perso_around(const QPointF &) {
-    // TODO
-    return true;
+bool GraphicsScene::has_ennemi_perso_around(const QPointF &pt) {
+    return _current_map->has_ennemi_around((pt/TILE_SIZE).toPoint());
 }
 
 void GraphicsScene::propose_end_of_move_action() {
@@ -418,7 +421,9 @@ void GraphicsScene::propose_end_of_move_action() {
 }
 
 void GraphicsScene::move_finished() {
-    // Finish the perso action
-    disconnect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(propose_end_of_move_action()));
-    unselect_object();
+    if(_selected_item) {
+        // Finish the perso action
+        disconnect(_selected_item, SIGNAL(signal_finish_moved()), this, SLOT(propose_end_of_move_action()));
+        unselect_object();
+    }
 }

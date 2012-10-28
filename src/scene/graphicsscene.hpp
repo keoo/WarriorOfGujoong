@@ -80,6 +80,8 @@ private:
 
     void move_finished();
 
+    bool has_ennemi_perso_around(const QPointF &pt);
+
 signals:
     void signal_end_of_turn();
     void signal_perso_mouse_hovered(Perso *perso);

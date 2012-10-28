@@ -1,6 +1,8 @@
 #include <QString>
+#include <QPoint>
 /* -- */
 #include "core/map_data/modelarea.h"
+#include "Perso.hpp"
 #include "player.hpp"
 #include "leveldata.hpp"
 
@@ -38,7 +40,7 @@ int LevelData::get_current_player()
 void LevelData::set_next_player()
 {
     _current_player ++;
-    if(_current_player > _players.size()) {
+    if(_current_player >= _players.size()) {
         _current_player = 0;
     }
 }
@@ -51,4 +53,18 @@ void LevelData::set_model_area(const QSharedPointer<ModelArea> &model)
 QSharedPointer<ModelArea> &LevelData::get_model_area()
 {
     return _model_area;
+}
+
+bool LevelData::has_ennemi_around(const QPoint &pos)
+{
+    foreach(Player *p, _players) {
+        if(p != _players[_current_player]) {
+            foreach(Perso *perso, p->get_persos()) {
+                if(perso->get_position().distance_to(pos) == 1) {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }

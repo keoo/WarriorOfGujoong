@@ -6,6 +6,7 @@
 
 class Player;
 class ModelArea;
+class QPoint;
 
 class LevelData : public QObject
 {
@@ -23,6 +24,9 @@ public:
 
     void set_model_area(const QSharedPointer<ModelArea> &model);
     QSharedPointer<ModelArea> &get_model_area();
+
+    // Return true if at least one ennemi is around the position
+    bool has_ennemi_around(const QPoint &pos);
 
 private:
     QList<Player *>  _players;

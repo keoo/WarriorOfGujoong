@@ -16,7 +16,7 @@
 
 #define NB_STEP_BY_MV 2.
 
-std::vector < std::vector<TileMM *> > ComputeMoves::_current_moves;
+std::vector < std::vector<MoveToCase *> > ComputeMoves::_current_moves;
 
 ComputeMoves::ComputeMoves()
 {
@@ -39,8 +39,8 @@ MoveAction *ComputeMoves::create_moves(const QPointF &begin_pos, const QPointF &
     double current_case_y = end_y;
 
     while(current_case_x != begin_x || current_case_y != begin_y) {
-        TileMM *current_case = _current_moves[current_case_x][current_case_y];
-        TileMM *previous_case = _current_moves[current_case_x][current_case_y]->prev;
+        MoveToCase *current_case = _current_moves[current_case_x][current_case_y];
+        MoveToCase *previous_case = _current_moves[current_case_x][current_case_y]->prev;
 
         double previous_case_x = previous_case->x;
         double previous_case_y = previous_case->y;
@@ -127,9 +127,9 @@ void ComputeMoves::compute_visibility(QSharedPointer<ModelArea> &model, const Gr
     const int map_height = area[0].size();
 
     for(int i = 0 ; i < map_width ; ++ i) {
-        std::vector <TileMM *> dataLine;
+        std::vector <MoveToCase *> dataLine;
         for(int j = 0 ; j < map_height ; ++ j) {
-            TileMM *tmpTile = new TileMM;
+            MoveToCase *tmpTile = new MoveToCase;
             dataLine.push_back(tmpTile);
             tmpTile->x = i;
             tmpTile->y = j;

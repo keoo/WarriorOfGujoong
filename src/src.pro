@@ -30,7 +30,9 @@ SOURCES += main.cpp\
         computemoves.cpp \
         persostatistics.cpp \
         scene/actionmenuwindow.cpp \
-        scene/graphictile.cpp
+        scene/graphictile.cpp \
+    scene/graphicdialog.cpp \
+    core/map_data/dialogtext.cpp
 
 HEADERS  += mainwindow.h \
         constants/ChainConstants.hpp \
@@ -50,10 +52,13 @@ HEADERS  += mainwindow.h \
         computemoves.hpp \
         persostatistics.hpp \
         scene/actionmenuwindow.hpp \
-        scene/graphictile.hpp
+        scene/graphictile.hpp \
+    scene/graphicdialog.hpp \
+    core/map_data/dialogtext.hpp
 
 FORMS    += mainwindow.ui \
     persostatistics.ui
 
 OTHER_FILES += \
-    World.xml
+    World.xml \
+    Dialogs.xml

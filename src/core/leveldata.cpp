@@ -1,7 +1,10 @@
 #include <QString>
 #include <QPoint>
+#include <QFile>
+#include <QDomElement>
 /* -- */
 #include "core/map_data/modelarea.h"
+#include "core/map_data/dialogtext.hpp"
 #include "Perso.hpp"
 #include "player.hpp"
 #include "leveldata.hpp"
@@ -11,6 +14,8 @@ LevelData::LevelData(const QList<Player *> &players, const QString &map_area_id)
     _players = players;
     _map_id = map_area_id;
     _current_player = 0;
+
+    load_dialogs(map_area_id);
 }
 
 LevelData::~LevelData()
@@ -68,3 +73,43 @@ bool LevelData::has_ennemi_around(const QPoint &pos)
     }
     return false;
 }
+
+const QList<QSharedPointer<DialogText> > &LevelData::get_dialogs() const
+{
+    return _dialogs;
+}
+
+void LevelData::load_dialogs(const QString &map_area_id)
+{
+    // Initializing xml document class
+    QDomDocument doc;
+    {
+        QFile f("Dialogs.xml");
+        f.open(QIODevice::ReadOnly);
+        doc.setContent(&f);
+        f.close();
+    }
+
+    // Filling dialogs
+    {
+        QDomElement root=doc.firstChild().toElement();
+        QDomElement child=root.firstChild().toElement();
+        while(!child.isNull()) {
+            // If we are
+            if (child.tagName() == "area" && child.attribute("id") == map_area_id) {
+                QDomElement tag_child = child.firstChild().toElement();
+                while(!tag_child.isNull()) {
+                    if (tag_child.tagName() == "phrase") {
+                        if (tag_child.hasAttribute("perso") && tag_child.hasAttribute("content")) {
+                            QSharedPointer<DialogText> dialog(new DialogText(tag_child.attribute("perso"), tag_child.attribute("content")));
+                            _dialogs.push_back(dialog);
+                        }
+                    }
+                    tag_child = tag_child.nextSibling().toElement();
+                }
+            }
+            child = child.nextSibling().toElement();
+        }
+    }
+}
+

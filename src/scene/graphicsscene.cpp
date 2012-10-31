@@ -25,6 +25,7 @@
 #include "scene/graphicsobject.hpp"
 #include "scene/graphictile.hpp"
 #include "scene/actionmenuwindow.hpp"
+#include "scene/graphicdialog.hpp"
 #include "computemoves.hpp"
 /* -- */
 #include "scene/graphicsscene.hpp"
@@ -35,7 +36,7 @@
 GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent), _current_state(WAITING), _current_map(NULL), _cursor_position(new QGraphicsRectItem()), _selected_item(NULL),
     _attack_item(new QGraphicsPixmapItem(QPixmap("/tmp/WarriorOfGujoong-tiles/weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))),
-    _action_menu(new ActionMenuWindow())
+    _action_menu(new ActionMenuWindow()), _dialogs(NULL)
 {
 }
 
@@ -86,6 +87,11 @@ void GraphicsScene::create_world(LevelData *mapData)
     _attack_item->setVisible(false);
 
     connect(this, SIGNAL(signal_end_of_turn()), _current_map, SLOT(set_next_player()));
+
+    // Show the dialogs first
+    _dialogs = new GraphicDialog(this, _current_map->get_dialogs(), DialogPosition(CENTER, BOTTOM));
+    connect(_dialogs, SIGNAL(signal_end_of_dialogs()), this, SLOT(hide_dialogs()));
+    _dialogs->next_text();
 }
 
 void GraphicsScene::add_objects(const QList<Perso *> objects) {
@@ -128,113 +134,128 @@ void GraphicsScene::create_map(const QSharedPointer <ModelArea> &area)  {
 
 void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(_current_state == WAITING) {
-        move_action(event->scenePos());
+    if(_dialogs) {
+
+    }
+    else {
+        if(_current_state == WAITING) {
+            move_action(event->scenePos());
+        }
     }
 }
 
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if(_current_state == WAITING && event->button() == Qt::LeftButton) {
-        click_action(event->scenePos());
+    if(_dialogs) {
+        QGraphicsScene::mousePressEvent(event);
     }
     else {
-        // TODO Gérer le cas ou on attaque
-        _current_state = WAITING;
-        _attack_item->setVisible(false);
-        move_finished();
-
+        if(_current_state == WAITING && event->button() == Qt::LeftButton) {
+            click_action(event->scenePos());
+        }
+        else {
+            // TODO Gérer le cas ou on attaque
+            _current_state = WAITING;
+            _attack_item->setVisible(false);
+            move_finished();
+        }
     }
 }
 
 void GraphicsScene::keyPressEvent(QKeyEvent *event)
 {
-    switch(_current_state) {
-    case WAITING:
-        switch(event->key()) {
-        case Qt::Key_Escape:
-            if(finish_turn()) {
-                // TODO Change current player
-                // Reinit perso moves
-                emit signal_end_of_turn();
+
+    if(_dialogs) {
+        QGraphicsScene::keyPressEvent(event);
+    }
+    else {
+        switch(_current_state) {
+        case WAITING:
+            switch(event->key()) {
+            case Qt::Key_Escape:
+                if(finish_turn()) {
+                    // TODO Change current player
+                    // Reinit perso moves
+                    emit signal_end_of_turn();
+                }
+                break;
+            case Qt::Key_Enter:
+            case Qt::Key_Return:
+                click_action(_cursor_position->pos());
+                break;
+            case Qt::Key_Space:
+                click_action(_cursor_position->pos());
+                break;
+            case Qt::Key_Up:
+                move_action(_cursor_position->pos() + QPointF(0, -TILE_SIZE));
+                break;
+            case Qt::Key_Down:
+                move_action(_cursor_position->pos() + QPointF(0, TILE_SIZE));
+                break;
+            case Qt::Key_Right:
+                move_action(_cursor_position->pos() + QPointF(TILE_SIZE, 0));
+                break;
+            case Qt::Key_Left:
+                move_action(_cursor_position->pos() + QPointF(-TILE_SIZE, 0));
+                break;
             }
             break;
-        case Qt::Key_Enter:
-        case Qt::Key_Return:
-            click_action(_cursor_position->pos());
+        case END_MOVING:
+            switch(event->key()) {
+            case Qt::Key_Escape:
+            case Qt::Key_Enter:
+            case Qt::Key_Return:
+                _current_state = WAITING;
+                break;
+            case Qt::Key_Up:
+                // TODO
+                break;
+            case Qt::Key_Down:
+                // TODO
+                break;
+            case Qt::Key_Right:
+                // TODO
+                break;
+            case Qt::Key_Left:
+                // TODO
+                break;
+            }
             break;
-        case Qt::Key_Space:
-            click_action(_cursor_position->pos());
-            break;
-        case Qt::Key_Up:
-            move_action(_cursor_position->pos() + QPointF(0, -TILE_SIZE));
-            break;
-        case Qt::Key_Down:
-            move_action(_cursor_position->pos() + QPointF(0, TILE_SIZE));
-            break;
-        case Qt::Key_Right:
-            move_action(_cursor_position->pos() + QPointF(TILE_SIZE, 0));
-            break;
-        case Qt::Key_Left:
-            move_action(_cursor_position->pos() + QPointF(-TILE_SIZE, 0));
-            break;
-        }
-        break;
-    case END_MOVING:
-        switch(event->key()) {
-        case Qt::Key_Escape:
-        case Qt::Key_Enter:
-        case Qt::Key_Return:
-            _current_state = WAITING;
-            break;
-        case Qt::Key_Up:
-            // TODO
-            break;
-        case Qt::Key_Down:
-            // TODO
-            break;
-        case Qt::Key_Right:
-            // TODO
-            break;
-        case Qt::Key_Left:
-            // TODO
-            break;
-        }
-        break;
-    case ATTACKING:
-        switch(event->key()) {
-        case Qt::Key_Escape:
-            _current_state = END_MOVING;
-            propose_end_of_move_action();
-            break;
-        case Qt::Key_Enter:
-        case Qt::Key_Return:
-            std::cout << "Do action : " << _action_menu->get_action().toStdString() << std::endl;
-            _current_state = WAITING;
-            _attack_item->setVisible(false);
-            // TODO Attack if an ennemi is under the sword
+        case ATTACKING:
+            switch(event->key()) {
+            case Qt::Key_Escape:
+                _current_state = END_MOVING;
+                propose_end_of_move_action();
+                break;
+            case Qt::Key_Enter:
+            case Qt::Key_Return:
+                std::cout << "Do action : " << _action_menu->get_action().toStdString() << std::endl;
+                _current_state = WAITING;
+                _attack_item->setVisible(false);
+                // TODO Attack if an ennemi is under the sword
 
-            // Then finish the move
-            move_finished();
-            break;
-            /* TODO Attention si 2 ennemis sont a côté et que le deuxieme n'est pas censé être atteignable, ça
+                // Then finish the move
+                move_finished();
+                break;
+                /* TODO Attention si 2 ennemis sont a côté et que le deuxieme n'est pas censé être atteignable, ça
             va être le cas avec le code qui suit... */
-        case Qt::Key_Up:
-            move_attack_sword(_attack_item->pos() + QPointF(0, -TILE_SIZE));
+            case Qt::Key_Up:
+                move_attack_sword(_attack_item->pos() + QPointF(0, -TILE_SIZE));
+                break;
+            case Qt::Key_Down:
+                move_attack_sword(_attack_item->pos() + QPointF(0, TILE_SIZE));
+                break;
+            case Qt::Key_Right:
+                move_attack_sword(_attack_item->pos() + QPointF(TILE_SIZE, 0));
+                break;
+            case Qt::Key_Left:
+                move_attack_sword(_attack_item->pos() + QPointF(-TILE_SIZE, 0));
+                break;
+            }
             break;
-        case Qt::Key_Down:
-            move_attack_sword(_attack_item->pos() + QPointF(0, TILE_SIZE));
-            break;
-        case Qt::Key_Right:
-            move_attack_sword(_attack_item->pos() + QPointF(TILE_SIZE, 0));
-            break;
-        case Qt::Key_Left:
-            move_attack_sword(_attack_item->pos() + QPointF(-TILE_SIZE, 0));
+        default:
             break;
         }
-        break;
-    default:
-        break;
     }
 }
 
@@ -418,6 +439,12 @@ void GraphicsScene::propose_end_of_move_action() {
             move_finished();
         }
     }
+}
+
+void GraphicsScene::hide_dialogs()
+{
+    delete _dialogs;
+    _dialogs = NULL;
 }
 
 void GraphicsScene::move_finished() {

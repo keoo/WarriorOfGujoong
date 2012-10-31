@@ -12,6 +12,7 @@ class ModelArea;
 class GraphicsObject;
 class ActionMenuWindow;
 class Perso;
+class GraphicDialog;
 
 enum ActionState {
     WAITING,
@@ -61,6 +62,8 @@ private:
 
     ActionMenuWindow *_action_menu;
 
+    GraphicDialog *_dialogs;
+
     // Creates the graphical items of the map and display them according to their position
     void create_map(const QSharedPointer<ModelArea> &area);
 
@@ -89,7 +92,7 @@ signals:
 
 public slots:
     void propose_end_of_move_action();
-
+    void hide_dialogs();
 };
 
 #endif // GRAPHICSSCENE_HPP

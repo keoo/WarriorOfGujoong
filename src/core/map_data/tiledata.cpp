@@ -15,7 +15,7 @@ TileData::TileData(const TileData &data) : QObject()
     _is_walkable_for_action = data._is_walkable_for_action;
 }
 
-const TileData &TileData::operator =(const TileData &data)
+TileData &TileData::operator =(const TileData &data)
 {
     _pixmap = data._pixmap;
     _is_walkable = data._is_walkable;

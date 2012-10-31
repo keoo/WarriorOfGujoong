@@ -15,23 +15,24 @@ struct Move {
     Direction sens;
 };
 
-struct TileMM {
+struct MoveToCase {
     int x;
     int y;
     int mob;
-    TileMM *prev;
+    MoveToCase *prev;
 };
 
 class MoveAction {
 public:
-    MoveAction() : _current_move(0){}
+    MoveAction() : _current_move(0), _moves(NULL){}
 
     void set_moves(QList<Move *> *moves) { _moves = moves; }
     QList<Move *> *get_moves() { return _moves; }
     qreal &get_current_move() { return _current_move; }
 private:
-    QList <Move *> *_moves;
+
     qreal _current_move;
+    QList <Move *> *_moves;
 };
 
 class ComputeMoves
@@ -39,7 +40,7 @@ class ComputeMoves
 private:
     ComputeMoves();
 
-    static std::vector < std::vector<TileMM *> > _current_moves;
+    static std::vector < std::vector<MoveToCase *> > _current_moves;
 
 public:
     static MoveAction *create_moves(const QPointF &begin_pos, const QPointF &end_pos);

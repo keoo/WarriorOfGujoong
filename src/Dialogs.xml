@@ -1,0 +1,9 @@
+<Dialog>
+    <area id="1">
+        <phrase perso="/tmp/WarriorOfGujoong-tiles/faces/kyle.png" content="Hello, is there anybody here ??"/>
+        <phrase perso="/tmp/WarriorOfGujoong-tiles/faces/ryan.png" content="Yes, I am."/>
+        <phrase perso="/tmp/WarriorOfGujoong-tiles/faces/chun.png" content="We need to get out of here. I'm gonna wet my pants."/>
+        <phrase perso="/tmp/WarriorOfGujoong-tiles/faces/ryan.png" content="Shut up woman, you need to go to the kitchen !"/>
+        <phrase perso="/tmp/WarriorOfGujoong-tiles/faces/chun.png" content="Oh you are so right. I'm a woman and I need to do the cleaning."/>
+    </area>
+</Dialog>

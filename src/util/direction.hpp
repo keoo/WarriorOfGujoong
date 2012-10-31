@@ -5,7 +5,8 @@ enum Direction {
     TOP,
     BOTTOM,
     LEFT,
-    RIGHT
+    RIGHT,
+    CENTER
 };
 
 #endif // DIRECTION_HPP

@@ -178,7 +178,11 @@ void ComputeMoves::compute_visibility(QSharedPointer<ModelArea> &model, const Gr
         }
     }
 
-    // FIXME We can not move on other persos, so we have to remove these cases
+    // We can not move on other persos, so we remove these cases
+    foreach(GraphicsObject *obj, persos) {
+        Perso *perso = obj->get_object();
+        _current_moves[perso->get_position().getX()][perso->get_position().getY()]->mob = INFINITY;
+    }
 
     // Do it on cases but then do it on model with signals send to graphic tile
     for (int ik = 0 ; ik < map_width ; ik ++) {

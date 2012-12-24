@@ -14,6 +14,8 @@
 /* -- */
 #include "graphicdialog.hpp"
 
+static const QString IMAGES_FACES_PATH = "/tmp/WarriorOfGujoong-tiles/faces/";
+
 GraphicDialog::GraphicDialog(QGraphicsScene *scene, const QList<QSharedPointer<DialogText> > &dialogs, const DialogPosition &dialog_pos) :
     QGraphicsProxyWidget()
 {
@@ -92,6 +94,13 @@ void GraphicDialog::mousePressEvent(QGraphicsSceneMouseEvent *)
     next_text();
 }
 
+void GraphicDialog::keyPressEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Escape) {
+        emit signal_end_of_dialogs();
+    }
+}
+
 void GraphicDialog::next_char()
 {
     _cur_letter ++;
@@ -122,7 +131,7 @@ void GraphicDialog::next_text()
         _cur_letter = 0;
 
         // Change the icon
-        _icon_perso->setPixmap(QPixmap(_texts[_cur_text].data()->_perso));
+        _icon_perso->setPixmap(QPixmap(IMAGES_FACES_PATH+_texts[_cur_text].data()->_perso + ".png"));
         // Start timer
         _timer.start();
         }

@@ -36,6 +36,9 @@ public:
     void unselect_object();
     bool has_selected_object() const;
 
+    // Free the data used by the scene (clear the items list, delete the current map)
+    void free_data();
+
 protected:
     // Methods inherited from the scene
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -69,9 +72,6 @@ private:
 
     // TODO load from files
     void add_objects(const QList<Perso *> objects);
-
-    // Free the data used by the scene (clear the items list, delete the current map)
-    void free_data();
 
     void click_action(const QPointF &pos);
 

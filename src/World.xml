@@ -57,6 +57,9 @@
       <tile id="tile_room_wardrobe_001" path="/tmp/WarriorOfGujoong-tiles/tile_room_wardrobe_001.png" canWalk="0" />
       <tile id="tile_room_wardrobe_002" path="/tmp/WarriorOfGujoong-tiles/tile_room_wardrobe_002.png" canWalk="0" />
       <tile id="tile_room_clock_001" path="/tmp/WarriorOfGujoong-tiles/tile_room_clock_001.png" canWalk="0" />
+      <tile id="tile-room-window-001" path="/tmp/WarriorOfGujoong-tiles/tile-room-window-001.png" canWalk="0" />
+      <tile id="tile-room-window-002" path="/tmp/WarriorOfGujoong-tiles/tile-room-window-002.png" canWalk="0" />
+
 </tiles>
 
     <area id="1" width="20" height="9">
@@ -339,15 +342,15 @@
         <position x="10" y="14" tileId="tile_room_wall_005" />
 
         <position x="0" y="13" tileId="tile_room_wall_004" />
-        <position x="1" y="13" tileId="castle_ground" />
-        <position x="2" y="13" tileId="castle_ground" />
+        <position x="1" y="13" tileId="castle-wall1" />
+        <position x="2" y="13" tileId="castle-wall1" />
         <position x="3" y="13" tileId="tile_room_statue_002" />
         <position x="4" y="13" tileId="tile_room_stairs_001" />
         <position x="5" y="13" tileId="tile_room_stairs_002" />
         <position x="6" y="13" tileId="tile_room_stairs_003" />
         <position x="7" y="13" tileId="tile_room_statue_002" />
-        <position x="8" y="13" tileId="tile_room_floor_001" />
-        <position x="9" y="13" tileId="castle_ground" />
+        <position x="8" y="13" tileId="castle-wall1" />
+        <position x="9" y="13" tileId="castle-wall1" />
         <position x="10" y="13" tileId="tile_room_wall_005" />
 
         <position x="0" y="12" tileId="tile_room_wall_004" />
@@ -483,24 +486,24 @@
         <position x="10" y="2" tileId="tile_room_wall_005" />
 
         <position x="0" y="1" tileId="tile_room_wall_004" />
-        <position x="1" y="1" tileId="tile_room_floor_001" />
+        <position x="1" y="1" tileId="tile_room_wardrobe_002" />
         <position x="2" y="1" tileId="tile_room_floor_001" />
         <position x="3" y="1" tileId="tile_room_chair_001" />
-        <position x="4" y="1" tileId="tile_room_floor_001" />
+        <position x="4" y="1" tileId="tile-room-window-002" />
         <position x="5" y="1" tileId="tile_room_chair_001" />
-        <position x="6" y="1" tileId="tile_room_floor_001" />
+        <position x="6" y="1" tileId="tile_room_wardrobe_002" />
         <position x="7" y="1" tileId="tile_room_floor_001" />
         <position x="8" y="1" tileId="tile_room_floor_001" />
         <position x="9" y="1" tileId="tile_room_bed_001" />
         <position x="10" y="1" tileId="tile_room_wall_005" />
 
         <position x="0" y="0" tileId="tile_room_wall_001" />
-        <position x="1" y="0" tileId="tile_room_wall_002" />
+        <position x="1" y="0" tileId="tile_room_wardrobe_001" />
         <position x="2" y="0" tileId="tile_room_wall_002" />
         <position x="3" y="0" tileId="tile_room_wall_002" />
-        <position x="4" y="0" tileId="tile_room_wall_002" />
+        <position x="4" y="0" tileId="tile-room-window-001" />
         <position x="5" y="0" tileId="tile_room_wall_002" />
-        <position x="6" y="0" tileId="tile_room_wall_002" />
+        <position x="6" y="0" tileId="tile_room_wardrobe_001" />
         <position x="7" y="0" tileId="tile_room_wall_002" />
         <position x="8" y="0" tileId="tile_room_clock_001" />
         <position x="9" y="0" tileId="tile_room_wall_002" />

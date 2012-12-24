@@ -9,7 +9,7 @@ class Perso;
 class Player : public QVariant
 {
 public:
-    explicit Player();
+    explicit Player(int id);
     ~Player();
 
     void set_persos(const QList<Perso *> &persos);
@@ -17,6 +17,8 @@ public:
     QList<Perso *> &get_persos();
 
 protected:
+    int _id;
+
     QList <Perso *> _persos;
 
 };

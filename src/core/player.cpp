@@ -4,7 +4,7 @@
 /* -- */
 #include "player.hpp"
 
-Player::Player() : _persos(QList<Perso *>())
+Player::Player(int id) : _id(id), _persos(QList<Perso *>())
 {
 }
 

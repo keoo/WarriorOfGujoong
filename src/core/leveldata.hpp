@@ -5,6 +5,7 @@
 #include <QSharedPointer>
 
 class Player;
+class Perso;
 class ModelArea;
 class QPoint;
 class DialogText;
@@ -20,6 +21,8 @@ public:
 
     const QString &get_map_id() const;
     const QList<Player *> &get_players() const;
+
+    Perso *get_perso_at(const QPoint &pos);
 
     int get_current_player();
 
@@ -40,8 +43,10 @@ private:
 
     // Dialogs at the beginning for this level
     QList <QSharedPointer<DialogText> > _dialogs;
-
+    // Load the dialog corresponding to this level
     void load_dialogs(const QString &map_area_id);
+    // Load the ennemies corresponding to this level
+    void load_ennemies(const QString &map_area_id);
 
 public slots:
     void set_next_player();

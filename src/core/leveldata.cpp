@@ -16,6 +16,7 @@ LevelData::LevelData(const QList<Player *> &players, const QString &map_area_id)
     _current_player = 0;
 
     load_dialogs(map_area_id);
+    load_ennemies(map_area_id);
 }
 
 LevelData::~LevelData()
@@ -35,6 +36,20 @@ const QString &LevelData::get_map_id() const
 const QList<Player *> &LevelData::get_players() const
 {
     return _players;
+}
+
+Perso *LevelData::get_perso_at(const QPoint &pos)
+{
+    foreach(Player *p, _players) {
+        if(p != _players[_current_player]) {
+            foreach(Perso *perso, p->get_persos()) {
+                if(perso->get_position().distance_to(pos) == 0) {
+                    return perso;
+                }
+            }
+        }
+    }
+    return NULL;
 }
 
 int LevelData::get_current_player()
@@ -111,5 +126,53 @@ void LevelData::load_dialogs(const QString &map_area_id)
             child = child.nextSibling().toElement();
         }
     }
+}
+
+#include <iostream>
+
+void LevelData::load_ennemies(const QString &map_area_id)
+{
+    // Initializing xml document class
+    QDomDocument doc;
+    {
+        QFile f("Ennemis.xml");
+        f.open(QIODevice::ReadOnly);
+        doc.setContent(&f);
+        f.close();
+    }
+
+    // Player 2
+    QList<Perso *> persos;
+    Player *p2 = new Player(1);
+
+    // Filling ennemi
+    {
+        QDomElement root=doc.firstChild().toElement();
+        QDomElement child=root.firstChild().toElement();
+
+        while(!child.isNull()) {
+            // If we are
+            if (child.tagName() == "area" && child.attribute("id") == map_area_id) {
+                QDomElement tag_child = child.firstChild().toElement();
+                while(!tag_child.isNull()) {
+                    if (tag_child.tagName() == "enemy") {
+                        if (tag_child.hasAttribute("lvl") && tag_child.hasAttribute("x")  && tag_child.hasAttribute("y")) {
+                            Perso *perso = new Perso(tag_child.attribute("id").toStdString(), 1);
+                            perso->set_position(Position(tag_child.attribute("x").toInt(), tag_child.attribute("y").toInt(), 0));
+                            perso->set_level(tag_child.attribute("lvl").toInt());
+                            perso->load_caracteristics();
+                            persos.push_back(perso);
+                        }
+                    }
+                    tag_child = tag_child.nextSibling().toElement();
+                }
+            }
+            child = child.nextSibling().toElement();
+        }
+    }
+
+    p2->set_persos(persos);
+
+    _players.push_back(p2);
 }
 

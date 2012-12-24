@@ -41,7 +41,7 @@ public :
   /**
    * \brief Constructor
    */
-  Perso(std::string name,
+  Perso(std::string name, int player_id,
         double HP = 0.0, double MP = 0.0,
 	double strength = 0.0, double power = 0.0,
 	double def = 0.0, double mr = 0.0,
@@ -223,6 +223,13 @@ public :
    */
   bool has_moved() const;
 
+  /**
+   * @brief load_caracteristics
+   * Load the caracteristics of the perso given its level
+   * Read from xml file the data. Only works for enemies
+   */
+  void load_caracteristics();
+
 protected :
   /**
    * \brief Level of the char
@@ -285,6 +292,10 @@ protected :
    * \brief if the perso has moved for this turn
    */
   bool _has_moved;
+  /**
+   * @brief player controlling this perso
+   */
+  int _player_id;
 
 public slots:
   /**

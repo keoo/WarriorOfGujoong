@@ -61,4 +61,5 @@ FORMS    += mainwindow.ui \
 
 OTHER_FILES += \
     World.xml \
+    Ennemis.xml \
     Dialogs.xml

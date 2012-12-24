@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class Perso;
+
 namespace Ui {
 class PersoStatistics;
 }
@@ -19,7 +21,7 @@ private:
     Ui::PersoStatistics *ui;
 
 public slots:
-    void slot_show_view(/*Perso*/);
+    void slot_show_view(Perso *perso);
     void slot_hide_view();
 };
 

@@ -15,6 +15,8 @@
 #include "scene/graphicsobject.hpp"
 
 static const int UPDATE_PERIOD = 200;
+static const QString IMG_PATH = "/tmp/WarriorOfGujoong-tiles/persos/";
+
 #define TILE_SIZE 48
 
 GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
@@ -30,7 +32,7 @@ GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
         // Load image for this direction while files exist for this direction
         while(file_exists) {
             // Check for next file
-            const QString filename = QString::fromStdString(obj->get_name()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
+            const QString filename = IMG_PATH + QString::fromStdString(obj->get_name()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
 
             if(QFile::exists(filename)) {
                 // File exists, we load the pixmap
@@ -124,12 +126,8 @@ void GraphicsObject::updateAnimation()
         scene()->views().at(0)->scale(scaleFactor, scaleFactor);
     }
 
-    scene()->views().at(0)->centerOn(this);
     // Last move
     if(_actions->get_current_move() >= _actions->get_moves()->size()) {
-        if(_actions->get_current_move() != 0) {
-            //setPos(_actions->get_moves()->at(_actions->get_current_move()-1)->pos_final);
-        }
         _current_pixmap->setVisible(false);
         _current_pixmap = _pixmaps[BOTTOM]->_items[0];
         _current_pixmap->setVisible(true);
@@ -150,7 +148,6 @@ void GraphicsObject::updateAnimation()
         _actions = NULL;
 
         scene()->views().at(0)->scale(1./scaleFactor, 1./scaleFactor);
-        scene()->views().at(0)->centerOn(0, 0);
         zoom = false;
     }
     else {

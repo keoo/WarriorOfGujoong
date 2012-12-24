@@ -39,8 +39,9 @@ private:
 
     void set_position(QGraphicsScene *scene, const DialogPosition &pos);
 
-protected:
+public:
     void mousePressEvent(QGraphicsSceneMouseEvent *);
+    void keyPressEvent(QKeyEvent *event);
 
 signals:
     void signal_end_of_dialogs();

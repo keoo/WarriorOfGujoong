@@ -38,11 +38,13 @@ GraphicsScene::GraphicsScene(QObject *parent) :
     _attack_item(new QGraphicsPixmapItem(QPixmap("/tmp/WarriorOfGujoong-tiles/weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))),
     _action_menu(new ActionMenuWindow()), _dialogs(NULL)
 {
+    setBackgroundBrush(QBrush(Qt::black));
 }
 
 GraphicsScene::~GraphicsScene() {
     free_data();
     delete _cursor_position;
+    delete _action_menu;
 }
 
 void GraphicsScene::free_data() {
@@ -135,7 +137,7 @@ void GraphicsScene::create_map(const QSharedPointer <ModelArea> &area)  {
 void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if(_dialogs) {
-
+        // Do nothing
     }
     else {
         if(_current_state == WAITING) {
@@ -147,7 +149,7 @@ void GraphicsScene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void GraphicsScene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if(_dialogs) {
-        QGraphicsScene::mousePressEvent(event);
+        _dialogs->mousePressEvent(event);
     }
     else {
         if(_current_state == WAITING && event->button() == Qt::LeftButton) {
@@ -166,7 +168,7 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
 {
 
     if(_dialogs) {
-        QGraphicsScene::keyPressEvent(event);
+        _dialogs->keyPressEvent(event);
     }
     else {
         switch(_current_state) {
@@ -174,8 +176,8 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
             switch(event->key()) {
             case Qt::Key_Escape:
                 if(finish_turn()) {
-                    // TODO Change current player
-                    // Reinit perso moves
+                    // signal connected to slots which change current player and
+                    // reinit perso moves
                     emit signal_end_of_turn();
                 }
                 break;
@@ -233,7 +235,8 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
                 _current_state = WAITING;
                 _attack_item->setVisible(false);
                 // TODO Attack if an ennemi is under the sword
-
+                std::cout << "Fight between : " << _selected_item->get_object()->get_name() <<
+                             " and " << _current_map->get_perso_at((_attack_item->pos().toPoint()/TILE_SIZE))->get_name() << std::endl;
                 // Then finish the move
                 move_finished();
                 break;

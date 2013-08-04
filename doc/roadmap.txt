@@ -11,3 +11,23 @@ v0.01 alpha-pre-0.0002:
 - Gérer le changement de tour.
 - Gestion des déplacements (déplacement une seule fois tant que le tour n'est pas fini + déplacement dynamique avec changement de sprites).
 - Réflexions sur l'implémentation de l'AI et algos de déplacements + visualisation des informations (différentes fenêtres utiles).
+
+
+****
+v0.01 alpha-pre-0.0002:
+* Ajout d'une scene pour gérer les combats (ok pour attaquer/fuite)
+* Ajout d'une scene pour afficher les stats de tous les persos (non implémenté encore)
+* Ajout HP/MP max
+* Signal envoyé quand un perso meurt
+* Signal envoyé pour changer de joueur
+
+TODO:
+stocker les mouvements au niveau des persos plutôt qu'une classe statique.
+Afficher les stats + Argent...
+Jouer de la musique
+Animations pour combats (+ gestion magie)
+Charger/Sauvegarder
+Gestion possiblité combat quand perso a bougé et à côté d'un ennemi (pour le moment, c'est sale)
+Quand un perso meurt, son adversaire doit gagner de l'xp + thune !
+Gérer la fin de monde (gagné ou perdu -> si perdu ==> Scene "PERDU", sinon Scene "ACHAT EQUIPEMENT")
+Supprimer MainWindow._stats_view

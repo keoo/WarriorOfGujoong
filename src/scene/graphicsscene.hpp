@@ -13,6 +13,7 @@ class GraphicsObject;
 class ActionMenuWindow;
 class Perso;
 class GraphicDialog;
+class Player;
 
 enum ActionState {
     WAITING,
@@ -87,12 +88,26 @@ private:
 
 signals:
     void signal_end_of_turn();
+
     void signal_perso_mouse_hovered(Perso *perso);
+
     void signal_perso_mouse_quit_hovered();
+
+    void signal_begin_fight(Perso *yours, Perso *opponent);
+
+    // Emitted when pushing 's'
+    void signal_show_stats();
 
 public slots:
     void propose_end_of_move_action();
     void hide_dialogs();
+
+    // Called when a player has lost
+    void slot_player_has_lost(Player *);
+
+    // Used because we store persos in class. Useful to store persos ?
+    void slot_perso_is_dead(Perso *);
+
 };
 
 #endif // GRAPHICSSCENE_HPP

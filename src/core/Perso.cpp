@@ -95,11 +95,24 @@ Perso::~Perso(){
 void
 Perso::set_HP(const double hp){
     _HP = hp;
+    if(hp <= 0) {
+        emit signal_perso_is_dead(this);
+    }
+}
+
+void
+Perso::set_max_HP(const double hp){
+    _max_HP = hp;
 }
 
 void
 Perso::set_MP(const double mp){
     _MP = mp;
+}
+
+void
+Perso::set_max_MP(const double mp){
+    _max_MP = mp;
 }
 
 void
@@ -143,8 +156,18 @@ Perso::get_HP(){
 }
 
 double
+Perso::get_max_HP(){
+    return _max_HP;
+}
+
+double
 Perso::get_MP(){
     return _MP+_shield.get_MP()+_weapon.get_MP();
+}
+
+double
+Perso::get_max_MP(){
+    return _max_MP;
 }
 
 double
@@ -289,6 +312,11 @@ void
 Perso::slot_reset_has_moved(){
     set_moved(false);
 }
+int
+Perso::get_player_id() {
+    return _player_id;
+}
+
 
 void
 Perso::load_caracteristics(){
@@ -318,7 +346,10 @@ Perso::load_caracteristics(){
                                 if (tag_child.attribute("id").toInt() == _lvl) {
                                     set_HP(tag_child.attribute("HP").toInt());
                                     set_MP(tag_child.attribute("MP").toInt());
+                                    set_max_HP(tag_child.attribute("HP").toInt());
+                                    set_max_MP(tag_child.attribute("MP").toInt());
                                     set_def(tag_child.attribute("def").toInt());
+                                    set_strength(tag_child.attribute("str").toInt());
                                     set_mobility(tag_child.attribute("mob").toInt());
                                 }
                             }

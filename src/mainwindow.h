@@ -2,14 +2,23 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMap>
 
-class GraphicsScene;
+class Perso;
+class QGraphicsScene;
 class PersoStatistics;
 class Player;
 
 namespace Ui {
 class MainWindow;
 }
+
+enum SceneId
+{
+    LEVEL_MAP,
+    FIGHT_SCENE,
+    STATS_SCENE
+};
 
 class MainWindow : public QMainWindow
 {
@@ -24,8 +33,12 @@ protected:
 
 private:
     Ui::MainWindow *ui;
+
+    // All the scenes game. The view used is ui->main_view
+    QMap<SceneId, QGraphicsScene *> _scenes;
+
     // Scene where the game takes place. The view used is ui->main_view
-    GraphicsScene *_scene;
+    QGraphicsScene *_current_scene;
 
     // Show view where statistics on perso are printed
     PersoStatistics *_stats_view;
@@ -39,6 +52,13 @@ private:
 protected slots:
     void on_action_new_game_triggered();
     void on_action_load_game_triggered();
+
+    void slot_begin_fight(Perso *yours, Perso *opponent);
+    void slot_end_fight();
+
+    void slot_show_stats();
+
+    void slot_hide_stats();
 };
 
 #endif // MAINWINDOW_H

@@ -4,7 +4,7 @@
 /* -- */
 #include "player.hpp"
 
-Player::Player(int id) : _id(id), _persos(QList<Perso *>())
+Player::Player(int id) : QObject(), _id(id), _persos(QList<Perso *>())
 {
 }
 
@@ -18,9 +18,20 @@ Player::~Player() {
 void Player::set_persos(const QList<Perso *> &persos)
 {
     _persos = persos;
+    foreach(Perso *p, _persos) {
+        connect(p, SIGNAL(signal_perso_is_dead(Perso *)), this, SLOT(perso_dead(Perso *)));
+    }
 }
 
 QList<Perso *> &Player::get_persos()
 {
     return _persos;
+}
+
+void Player::perso_dead(Perso *perso)
+{
+    _persos.removeAll(perso);
+    if(_persos.isEmpty()) {
+        emit signal_player_has_lost(this);
+    }
 }

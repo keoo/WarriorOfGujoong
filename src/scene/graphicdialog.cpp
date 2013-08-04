@@ -9,6 +9,7 @@
 #include <QGraphicsProxyWidget>
 #include <QGraphicsScene>
 #include <QSharedPointer>
+#include <QGraphicsView>
 /* -- */
 #include "core/map_data/dialogtext.hpp"
 /* -- */
@@ -48,17 +49,32 @@ GraphicDialog::GraphicDialog(QGraphicsScene *scene, const QList<QSharedPointer<D
 
     setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
 
-    setMinimumWidth(scene->sceneRect().width()/2);
+    setMinimumWidth(scene->views()[0]->width()/2);
 
     set_position(scene, dialog_pos);
-
-   // setScale(1.5);
 
     connect(&_timer, SIGNAL(timeout()), this, SLOT(next_char()));
 }
 
 void GraphicDialog::set_position(QGraphicsScene *scene, const DialogPosition &dialog_pos)
 {
+    /*QPointF topLeft = mapToScene (0, 0);
+    QPointF bottomRight = mapToScene (scene->width(), scene->height());
+    */
+
+    QPointF topLeft = scene->views()[0]->mapToScene( QPoint(0,0) );
+    QPointF bottomRight = scene->views()[0]->mapToScene(QPoint(
+                scene->views()[0]->viewport()->width(),
+                scene->views()[0]->viewport()->height()));
+
+    QRectF rect = QRectF(topLeft, bottomRight);
+
+    //QRectF sceneRect = scene->sceneRect();
+    QRectF sceneRect = rect;
+
+    std::cout << "rect x=" << sceneRect.x() << " y=" << sceneRect.y()
+              << " w=" << sceneRect.width() << " h=" << sceneRect.height() << std::endl;
+
     // Set position
    double pos_x = 0;
    switch(dialog_pos._horizontal_dir) {
@@ -66,10 +82,10 @@ void GraphicDialog::set_position(QGraphicsScene *scene, const DialogPosition &di
        pos_x = 0;
        break;
    case RIGHT:
-       pos_x = scene->sceneRect().width()-size().width();
+       pos_x = sceneRect.width()-size().width();
        break;
    default:
-       pos_x = (scene->sceneRect().width()-size().width()) / 2.;
+       pos_x = (sceneRect.width()-size().width()) / 2.;
    break;
    }
    double pos_y = 0;
@@ -78,10 +94,10 @@ void GraphicDialog::set_position(QGraphicsScene *scene, const DialogPosition &di
        pos_y = 0;
        break;
    case BOTTOM:
-       pos_y = scene->sceneRect().height()-size().height();
+       pos_y = sceneRect.height()-size().height();
        break;
    default:
-       pos_y = (scene->sceneRect().height()-size().height()) / 2.;
+       pos_y = (sceneRect.height()-size().height()) / 2.;
    break;
    }
     setPos(pos_x, pos_y);

@@ -11,8 +11,11 @@
 #include "core/leveldata.hpp"
 /* -- */
 #include "core/map_data/modelworld.h"
+/* -- */
 #include "scene/graphictile.hpp"
 #include "scene/graphicsscene.hpp"
+#include "scene/statsscene.hpp"
+#include "scene/fightscene.hpp"
 /* -- */
 #include "persostatistics.hpp"
 /* -- */
@@ -20,7 +23,7 @@
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),ui(new Ui::MainWindow), _scene(NULL)
+    QMainWindow(parent),ui(new Ui::MainWindow), _current_scene(NULL)
 {
     ui->setupUi(this);
 
@@ -32,12 +35,24 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->horizontalLayout->addWidget(_stats_view);
     _stats_view->setVisible(false);
+
+    FightScene *fight_scene = new FightScene();
+    _scenes[FIGHT_SCENE] = fight_scene;
+    connect(fight_scene, SIGNAL(signal_end_fight()), this, SLOT(slot_end_fight()));
+
+    StatsScene *stat_scene = new StatsScene();
+    _scenes[STATS_SCENE] = stat_scene;
+    connect(stat_scene, SIGNAL(signal_hide_stats()), this, SLOT(slot_hide_stats()));
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete _scene;
+    foreach(QGraphicsScene *scene, _scenes)
+        delete scene;
+
+    _scenes.clear();
+    _current_scene = NULL;
 }
 
 
@@ -62,12 +77,18 @@ void MainWindow::on_action_load_game_triggered() {
 }
 
 void MainWindow::load_map(const QString &world_name) {
-    delete _scene;
-    _scene = new GraphicsScene();
-    ui->main_view->setScene(_scene);
+    delete _scenes[LEVEL_MAP];
+
+    _current_scene = new GraphicsScene();
+    ui->main_view->setScene(_current_scene);
+
+    _scenes[LEVEL_MAP] = _current_scene;
 
     //connect(_scene, SIGNAL(signal_perso_mouse_hovered(Perso *)), _stats_view, SLOT(slot_show_view(Perso *)));
     //connect(_scene, SIGNAL(signal_perso_mouse_quit_hovered()), _stats_view, SLOT(slot_hide_view()));
+
+    connect((GraphicsScene*)_current_scene, SIGNAL(signal_begin_fight(Perso *, Perso *)), this, SLOT(slot_begin_fight(Perso *, Perso *)));
+    connect((GraphicsScene*)_current_scene, SIGNAL(signal_show_stats()), this, SLOT(slot_show_stats()));
 
     ModelWorld *mw = new ModelWorld("World.xml");
     try {
@@ -87,7 +108,7 @@ void MainWindow::load_map(const QString &world_name) {
             mapData->set_model_area(model_area.at(world_name));
         }
 
-        _scene->create_world(mapData);
+        ((GraphicsScene*)_current_scene)->create_world(mapData);
     }
     catch (const QString &e) {
         QMessageBox::critical(this, "Critical error occured", e);
@@ -101,21 +122,64 @@ void MainWindow::temporary_load_human_player(QList <Player *> &players) {
     Perso *obj = new Perso("chun", 0);
     obj->set_position(Position(1, 4, 0));
     obj->set_HP(10);
+    obj->set_max_HP(15);
+    obj->set_MP(12);
+    obj->set_max_MP(14);
+    obj->set_strength(5);
     obj->set_mobility(6);
     persos.push_back(obj);
     obj = new Perso("kyle", 0);
     obj->set_position(Position(2, 4, 0));
     obj->set_HP(15);
+    obj->set_max_HP(25);
+    obj->set_MP(22);
+    obj->set_max_MP(24);
     obj->set_mobility(4);
+    obj->set_strength(21);
     persos.push_back(obj);
     obj = new Perso("ryan", 0);
     obj->set_position(Position(3, 4, 0));
     obj->set_HP(20);
+    obj->set_max_HP(20);
+    obj->set_MP(10);
+    obj->set_max_MP(30);
     obj->set_mobility(5);
+    obj->set_strength(6);
     persos.push_back(obj);
 
     Player *p1 = new Player(0);
     p1->set_persos(persos);
 
     players.push_back(p1);
+}
+
+void MainWindow::slot_begin_fight(Perso *yours, Perso *opponent)
+{
+    printf("Switch to fight scene!\n");
+    FightScene *scene = dynamic_cast<FightScene *>(_scenes[FIGHT_SCENE]);
+    _current_scene = scene;
+    ui->main_view->setScene(_current_scene);
+
+    scene->begin_fight(yours, opponent);
+}
+
+void MainWindow::slot_end_fight()
+{
+    // Get back to level scene
+    _current_scene = _scenes[LEVEL_MAP];
+    ui->main_view->setScene(_current_scene);
+}
+
+void MainWindow::slot_show_stats()
+{
+    // Get back to level scene
+    _current_scene = _scenes[STATS_SCENE];
+    ui->main_view->setScene(_current_scene);
+}
+
+void MainWindow::slot_hide_stats()
+{
+    // Get back to level scene
+    _current_scene = _scenes[LEVEL_MAP];
+    ui->main_view->setScene(_current_scene);
 }

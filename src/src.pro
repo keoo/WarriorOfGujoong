@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui xml
+QT       += core gui xml widgets
 
 TARGET = src
 TEMPLATE = app
@@ -32,7 +32,10 @@ SOURCES += main.cpp\
         scene/actionmenuwindow.cpp \
         scene/graphictile.cpp \
     scene/graphicdialog.cpp \
-    core/map_data/dialogtext.cpp
+    core/map_data/dialogtext.cpp \
+    scene/graphicdeadeffect.cpp \
+    scene/fightscene.cpp \
+    scene/statsscene.cpp
 
 HEADERS  += mainwindow.h \
         constants/ChainConstants.hpp \
@@ -54,7 +57,10 @@ HEADERS  += mainwindow.h \
         scene/actionmenuwindow.hpp \
         scene/graphictile.hpp \
     scene/graphicdialog.hpp \
-    core/map_data/dialogtext.hpp
+    core/map_data/dialogtext.hpp \
+    scene/graphicdeadeffect.hpp \
+    scene/fightscene.hpp \
+    scene/statsscene.hpp
 
 FORMS    += mainwindow.ui \
     persostatistics.ui

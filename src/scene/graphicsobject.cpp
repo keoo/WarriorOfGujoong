@@ -7,6 +7,7 @@
 #include <iostream>
 /* -- */
 #include "scene/graphictile.hpp"
+#include "scene/graphicdeadeffect.hpp"
 /* -- */
 #include "computemoves.hpp"
 /* -- */
@@ -72,6 +73,10 @@ GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
 
     // Connection between the graphical object and the data
     connect(_perso, SIGNAL(signal_set_has_moved(bool)), this, SLOT(slot_perso_has_move(bool)));
+
+    // Connection between the graphical object and the data
+    connect(_perso, SIGNAL(signal_perso_is_dead(Perso *)), this, SLOT(slot_perso_dead(Perso *)));
+
 }
 
 GraphicsObject::~GraphicsObject()
@@ -96,6 +101,12 @@ void GraphicsObject::move_object_to(const QPointF &new_pos)
 
 }
 
+void GraphicsObject::slot_perso_dead(Perso *)
+{
+    // setGraphicsEffect(new GraphicDeadEffect());
+    deleteLater();
+}
+
 bool GraphicsObject::has_moved() const
 {
     return _perso->has_moved();
@@ -114,6 +125,11 @@ void GraphicsObject::slot_perso_has_move(bool has_moved)
     else {
         _status->setBrush(QBrush(QColor(Qt::green)));
     }
+}
+
+void GraphicsObject::slot_set_current_player(int cur_player)
+{
+    _status->setVisible(cur_player == _perso->get_player_id());
 }
 
 void GraphicsObject::updateAnimation()

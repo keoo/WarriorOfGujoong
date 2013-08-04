@@ -63,6 +63,8 @@ void LevelData::set_next_player()
     if(_current_player >= _players.size()) {
         _current_player = 0;
     }
+
+    emit signal_change_current_player(_current_player);
 }
 
 void LevelData::set_model_area(const QSharedPointer<ModelArea> &model)
@@ -127,8 +129,6 @@ void LevelData::load_dialogs(const QString &map_area_id)
         }
     }
 }
-
-#include <iostream>
 
 void LevelData::load_ennemies(const QString &map_area_id)
 {

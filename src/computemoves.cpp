@@ -104,11 +104,13 @@ MoveAction *ComputeMoves::create_moves(const QPointF &begin_pos, const QPointF &
 
 void ComputeMoves::release_moves(MoveAction *mv_action)
 {
-    foreach (Move *mv, *(mv_action->get_moves())) {
-        delete mv;
+    if(mv_action != NULL) {
+        foreach (Move *mv, *(mv_action->get_moves())) {
+            delete mv;
+        }
+        delete mv_action->get_moves();
+        delete mv_action;
     }
-    delete mv_action->get_moves();
-    delete mv_action;
 
     for(unsigned int i = 0 ; i < _current_moves.size() ; i ++) {
         for (unsigned int j = 0 ; j < _current_moves[i].size() ; j ++) {
@@ -125,6 +127,9 @@ void ComputeMoves::compute_visibility(QSharedPointer<ModelArea> &model, const Gr
     std::vector < std::vector<QSharedPointer<TileData> > > &area = model.data()->get_tiles_grid();
     const int map_width = area.size();
     const int map_height = area[0].size();
+
+    // Clean before computing
+    release_moves(NULL);
 
     for(int i = 0 ; i < map_width ; ++ i) {
         std::vector <MoveToCase *> dataLine;
@@ -180,9 +185,12 @@ void ComputeMoves::compute_visibility(QSharedPointer<ModelArea> &model, const Gr
 
     // We can not move on other persos, so we remove these cases
     foreach(GraphicsObject *obj, persos) {
-        Perso *perso = obj->get_object();
-        _current_moves[perso->get_position().getX()][perso->get_position().getY()]->mob = INFINITY;
+        Perso *all_perso = obj->get_object();
+        _current_moves[all_perso->get_position().getX()][all_perso->get_position().getY()]->mob = INFINITY;
     }
+
+    // We can stay on this position
+    _current_moves[perso->get_object()->get_position().getX()][perso->get_object()->get_position().getY()]->mob = 0;
 
     // Do it on cases but then do it on model with signals send to graphic tile
     for (int ik = 0 ; ik < map_width ; ik ++) {
@@ -191,6 +199,5 @@ void ComputeMoves::compute_visibility(QSharedPointer<ModelArea> &model, const Gr
             area[ik][jk].data()->set_walkable_for_action(_current_moves[ik][jk]->mob >= 0 && _current_moves[ik][jk]->mob != INFINITY);
         }
     }
-    // TODO Store the data and do not forget to delete it !
 }
 

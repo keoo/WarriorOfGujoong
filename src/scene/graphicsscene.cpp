@@ -78,6 +78,8 @@ void GraphicsScene::create_world(LevelData *mapData)
     // Add players object
     foreach(Player *player, _current_map->get_players()) {
         add_objects(player->get_persos());
+
+        connect(player, SIGNAL(signal_player_has_lost(Player*)), this, SLOT(slot_player_has_lost(Player *)));
     }
 
     // TODO Set to tile size
@@ -109,6 +111,13 @@ void GraphicsScene::add_objects(const QList<Perso *> objects) {
         // Signal/slot connections
         // Connect end of turn signal with all persos
         connect(this, SIGNAL(signal_end_of_turn()), obj, SLOT(slot_reset_has_moved()));
+        connect(obj, SIGNAL(signal_perso_is_dead(Perso*)), this, SLOT(slot_perso_is_dead(Perso *)));
+
+
+        connect(_current_map, SIGNAL(signal_change_current_player(int)), graphicObject, SLOT(slot_set_current_player(int)));
+
+        // You have to do it once to initialize data
+        graphicObject->slot_set_current_player(_current_map->get_current_player());
     }
 }
 
@@ -200,6 +209,8 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
             case Qt::Key_Left:
                 move_action(_cursor_position->pos() + QPointF(-TILE_SIZE, 0));
                 break;
+            case Qt::Key_S:
+                emit signal_show_stats();
             }
             break;
         case END_MOVING:
@@ -225,23 +236,9 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
             break;
         case ATTACKING:
             switch(event->key()) {
-            case Qt::Key_Escape:
-                _current_state = END_MOVING;
-                propose_end_of_move_action();
-                break;
-            case Qt::Key_Enter:
-            case Qt::Key_Return:
-                std::cout << "Do action : " << _action_menu->get_action().toStdString() << std::endl;
-                _current_state = WAITING;
-                _attack_item->setVisible(false);
-                // TODO Attack if an ennemi is under the sword
-                std::cout << "Fight between : " << _selected_item->get_object()->get_name() <<
-                             " and " << _current_map->get_perso_at((_attack_item->pos().toPoint()/TILE_SIZE))->get_name() << std::endl;
-                // Then finish the move
-                move_finished();
-                break;
-                /* TODO Attention si 2 ennemis sont a côté et que le deuxieme n'est pas censé être atteignable, ça
-            va être le cas avec le code qui suit... */
+
+            /* TODO Attention si 2 ennemis sont a côté et que le deuxieme n'est pas censé être atteignable, ça
+        va être le cas avec le code qui suit... */
             case Qt::Key_Up:
                 move_attack_sword(_attack_item->pos() + QPointF(0, -TILE_SIZE));
                 break;
@@ -253,6 +250,26 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
                 break;
             case Qt::Key_Left:
                 move_attack_sword(_attack_item->pos() + QPointF(-TILE_SIZE, 0));
+                break;
+
+            case Qt::Key_Escape:
+                _current_state = END_MOVING;
+                propose_end_of_move_action();
+                break;
+            case Qt::Key_Enter:
+            case Qt::Key_Return:
+                std::cout << "Do action : " << _action_menu->get_action().toStdString() << std::endl;
+                _current_state = WAITING;
+                _attack_item->setVisible(false);
+                // TODO Attack if an ennemi is under the sword
+                Perso *attacker = _selected_item->get_object();
+                Perso *opponent = _current_map->get_perso_at((_attack_item->pos().toPoint()/TILE_SIZE));
+
+                // Then finish the move
+                move_finished();
+
+                emit signal_begin_fight(attacker, opponent);
+
                 break;
             }
             break;
@@ -295,8 +312,8 @@ void GraphicsScene::click_action(const QPointF &pos) {
         // Look if there is a perso at the position
         foreach(QGraphicsItem *it, items(pos)) {
             GraphicsObject *perso = qgraphicsitem_cast<GraphicsObject *>(it);
-            // TODO add condition perso.get_player == current_player
-            if(perso && !perso->has_moved()) {
+            // If the perso has not moved and belongs to the current player, we select it
+            if(perso && !perso->has_moved() && perso->get_object()->get_player_id() == _current_map->get_current_player()) {
                 // Select the perso
                 select_object(qgraphicsitem_cast<GraphicsObject *>(perso));
 
@@ -319,7 +336,7 @@ bool GraphicsScene::finish_turn()
 void GraphicsScene::move_action(const QPointF &new_pos) {
 
     // Is there an item at the cursor pos ?
-    QGraphicsItem *item = itemAt(new_pos);
+    QGraphicsItem *item = itemAt(new_pos, QTransform());
 
     // If it is on the map, we move it
     if(item && !qgraphicsitem_cast<QGraphicsRectItem *>(item)) {
@@ -448,6 +465,27 @@ void GraphicsScene::hide_dialogs()
 {
     delete _dialogs;
     _dialogs = NULL;
+}
+
+void GraphicsScene::slot_player_has_lost(Player *)
+{
+    // TODO
+    std::cout << "player has lost" << std::endl;
+}
+
+void GraphicsScene::slot_perso_is_dead(Perso *perso)
+{
+    int id = -1;
+    for(int i = 0 ; i < _persos.size() ; ++ i) {
+        if(_persos[i]->get_object() == perso)
+            id = i;
+    }
+    if(id == -1) {
+        printf("error...\n");
+    }
+    else {
+        _persos.remove(id);
+    }
 }
 
 void GraphicsScene::move_finished() {

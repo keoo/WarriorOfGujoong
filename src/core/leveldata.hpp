@@ -43,13 +43,18 @@ private:
 
     // Dialogs at the beginning for this level
     QList <QSharedPointer<DialogText> > _dialogs;
+
     // Load the dialog corresponding to this level
     void load_dialogs(const QString &map_area_id);
+
     // Load the ennemies corresponding to this level
     void load_ennemies(const QString &map_area_id);
 
 public slots:
     void set_next_player();
+
+signals:
+    void signal_change_current_player(int cur_player);
 };
 
 #endif // LEVELDATA_HPP

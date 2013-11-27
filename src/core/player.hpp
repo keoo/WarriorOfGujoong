@@ -17,6 +17,8 @@ public:
 
     QList<Perso *> &get_persos();
 
+    int get_id();
+
 protected:
     int _id;
     QList <Perso *> _persos;

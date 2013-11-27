@@ -27,4 +27,8 @@
         <enemy id="soldier" lvl="3" x="7" y="6" />
         <enemy id="soldier" lvl="3" x="8" y="7" />
     </area>
+
+    <area id="test">
+        <enemy id="soldier" lvl="1" x="4" y="6" />
+    </area>
 </World>

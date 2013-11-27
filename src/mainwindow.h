@@ -57,8 +57,9 @@ protected slots:
     void slot_end_fight();
 
     void slot_show_stats();
-
     void slot_hide_stats();
+
+    void slot_player_has_lost(Player *p);
 };
 
 #endif // MAINWINDOW_H

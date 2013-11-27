@@ -6,6 +6,8 @@
 #include <QFile>
 #include <iostream>
 /* -- */
+#include "constants/ChainConstants.hpp"
+/* -- */
 #include "scene/graphictile.hpp"
 #include "scene/graphicdeadeffect.hpp"
 /* -- */
@@ -16,7 +18,6 @@
 #include "scene/graphicsobject.hpp"
 
 static const int UPDATE_PERIOD = 200;
-static const QString IMG_PATH = "/tmp/WarriorOfGujoong-tiles/persos/";
 
 #define TILE_SIZE 48
 
@@ -33,7 +34,7 @@ GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
         // Load image for this direction while files exist for this direction
         while(file_exists) {
             // Check for next file
-            const QString filename = IMG_PATH + QString::fromStdString(obj->get_name()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
+            const QString filename = Constants::IMAGES_PERSOS_PATH + QString::fromStdString(obj->get_name()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
 
             if(QFile::exists(filename)) {
                 // File exists, we load the pixmap

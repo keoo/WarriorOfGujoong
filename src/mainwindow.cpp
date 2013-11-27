@@ -62,7 +62,6 @@ void MainWindow::resizeEvent(QResizeEvent *event) {
 }
 
 void MainWindow::on_action_new_game_triggered() {
-
     qDebug("New game");
     load_map("1");
 }
@@ -109,6 +108,15 @@ void MainWindow::load_map(const QString &world_name) {
         }
 
         ((GraphicsScene*)_current_scene)->create_world(mapData);
+
+        // Store players to show their stats
+        StatsScene *stat_scene = dynamic_cast<StatsScene *>(_scenes[STATS_SCENE]);
+        stat_scene->set_players(players);
+
+        //
+        foreach(Player *player, players) {
+            connect(player, SIGNAL(signal_player_has_lost(Player*)), this, SLOT(slot_player_has_lost(Player *)));
+        }
     }
     catch (const QString &e) {
         QMessageBox::critical(this, "Critical error occured", e);
@@ -175,6 +183,8 @@ void MainWindow::slot_show_stats()
     // Get back to level scene
     _current_scene = _scenes[STATS_SCENE];
     ui->main_view->setScene(_current_scene);
+    StatsScene *stat_scene = dynamic_cast<StatsScene *>(_scenes[STATS_SCENE]);
+    stat_scene->refresh_stats();
 }
 
 void MainWindow::slot_hide_stats()
@@ -182,4 +192,14 @@ void MainWindow::slot_hide_stats()
     // Get back to level scene
     _current_scene = _scenes[LEVEL_MAP];
     ui->main_view->setScene(_current_scene);
+}
+
+void MainWindow::slot_player_has_lost(Player *p)
+{
+    if(p->get_id() == 0) {
+        printf("You lost, TODO Display game over!\n");
+    }
+    else {
+        printf("You won this level, Display town to buy weapons!\n");
+    }
 }

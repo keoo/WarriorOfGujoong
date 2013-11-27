@@ -35,7 +35,7 @@
 
 GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent), _current_state(WAITING), _current_map(NULL), _cursor_position(new QGraphicsRectItem()), _selected_item(NULL),
-    _attack_item(new QGraphicsPixmapItem(QPixmap("/tmp/WarriorOfGujoong-tiles/weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))),
+    _attack_item(new QGraphicsPixmapItem(QPixmap("../resources/WarriorOfGujoong-tiles/weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))),
     _action_menu(new ActionMenuWindow()), _dialogs(NULL)
 {
     setBackgroundBrush(QBrush(Qt::black));
@@ -198,16 +198,16 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
                 click_action(_cursor_position->pos());
                 break;
             case Qt::Key_Up:
-                move_action(_cursor_position->pos() + QPointF(0, -TILE_SIZE));
+                move_action(_cursor_position->pos() + QPointF(1, -TILE_SIZE+1));
                 break;
             case Qt::Key_Down:
-                move_action(_cursor_position->pos() + QPointF(0, TILE_SIZE));
+                move_action(_cursor_position->pos() + QPointF(1, TILE_SIZE+1));
                 break;
             case Qt::Key_Right:
-                move_action(_cursor_position->pos() + QPointF(TILE_SIZE, 0));
+                move_action(_cursor_position->pos() + QPointF(TILE_SIZE+1, 1));
                 break;
             case Qt::Key_Left:
-                move_action(_cursor_position->pos() + QPointF(-TILE_SIZE, 0));
+                move_action(_cursor_position->pos() + QPointF(-TILE_SIZE+1, 1));
                 break;
             case Qt::Key_S:
                 emit signal_show_stats();
@@ -463,14 +463,14 @@ void GraphicsScene::propose_end_of_move_action() {
 
 void GraphicsScene::hide_dialogs()
 {
-    delete _dialogs;
+    _dialogs->deleteLater();
     _dialogs = NULL;
 }
 
-void GraphicsScene::slot_player_has_lost(Player *)
+void GraphicsScene::slot_player_has_lost(Player *p)
 {
     // TODO
-    std::cout << "player has lost" << std::endl;
+    std::cout << "player " << p << " has lost" << std::endl;
 }
 
 void GraphicsScene::slot_perso_is_dead(Perso *perso)

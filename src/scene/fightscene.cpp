@@ -1,14 +1,12 @@
-
 #include <QGraphicsPixmapItem>
 #include <QKeyEvent>
+/* -- */
+#include "constants/ChainConstants.hpp"
 /* -- */
 #include "core/Perso.hpp"
 /* -- */
 #include "fightscene.hpp"
 
-
-static const QString IMAGES_FACES_PATH = "/tmp/WarriorOfGujoong-tiles/faces/";
-static const QString IMAGES_DATA_PATH = "/tmp/WarriorOfGujoong-tiles/fight/";
 
 struct FightAction
 {
@@ -17,7 +15,7 @@ struct FightAction
     QString label;
 };
 
-static const FightAction TEXT_ACTION_POSITIONS[] = {{0, 200, "Attack"}, {100, 200, "Magic"}, {0, 300, "Run"}};
+static const FightAction TEXT_ACTION_POSITIONS[] = {{0, 200, Constants::ATTACK}, {100, 200, Constants::MAGIC}, {0, 300, Constants::RUN}};
 
 class CursorActionItem : public QGraphicsPixmapItem
 {
@@ -43,7 +41,7 @@ FightScene::FightScene(QObject *parent) :
     addItem(_attacker_perso_icon);
     addItem(_opponent_perso_icon);
 
-    _cursor_icon = new CursorActionItem(QPixmap(IMAGES_DATA_PATH + "cursor.png"), ATTACK);
+    _cursor_icon = new CursorActionItem(QPixmap(Constants::IMAGES_DATA_PATH + "cursor.png"), ATTACK);
     addItem(_cursor_icon);
 
 
@@ -91,13 +89,13 @@ void FightScene::begin_fight(Perso *yours, Perso *opponent)
 
     _cursor_icon->setAction(ATTACK);
 
-    // TODO... things :)
+    // TODO... things :) (beautifully the scene)
     _attacker = yours;
     _opponent = opponent;
 
     // Set images
-    _attacker_perso_icon->setPixmap(QPixmap(IMAGES_FACES_PATH + QString::fromStdString(yours->get_name()) + ".png"));
-    _opponent_perso_icon->setPixmap(QPixmap(IMAGES_FACES_PATH + QString::fromStdString(opponent->get_name()) + ".png"));
+    _attacker_perso_icon->setPixmap(QPixmap(Constants::IMAGES_FACES_PATH + QString::fromStdString(yours->get_name()) + ".png"));
+    _opponent_perso_icon->setPixmap(QPixmap(Constants::IMAGES_FACES_PATH + QString::fromStdString(opponent->get_name()) + ".png"));
 
     // Set HPs, MPs
     update_HP_and_MP();
@@ -105,7 +103,7 @@ void FightScene::begin_fight(Perso *yours, Perso *opponent)
 
 void FightScene::do_attack()
 {
-    int damage = _attacker->get_strength(); // Do something with _opponent->get_shield()
+    int damage = _attacker->get_strength(); // TODO Do something with _opponent->get_shield()
     if(damage > _opponent->get_HP())
         damage = _opponent->get_HP();
 

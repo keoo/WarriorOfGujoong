@@ -11,11 +11,12 @@
 #include <QSharedPointer>
 #include <QGraphicsView>
 /* -- */
+#include "constants/ChainConstants.hpp"
+/* -- */
 #include "core/map_data/dialogtext.hpp"
 /* -- */
 #include "graphicdialog.hpp"
 
-static const QString IMAGES_FACES_PATH = "/tmp/WarriorOfGujoong-tiles/faces/";
 
 GraphicDialog::GraphicDialog(QGraphicsScene *scene, const QList<QSharedPointer<DialogText> > &dialogs, const DialogPosition &dialog_pos) :
     QGraphicsProxyWidget()
@@ -39,7 +40,7 @@ GraphicDialog::GraphicDialog(QGraphicsScene *scene, const QList<QSharedPointer<D
     _text_widget->setStyleSheet("border: 2px solid gray; border-radius: 10px; padding: 0 8px; \
                                 background: transparent;");
 
-    QFontMetrics metrics(QApplication::font());
+            QFontMetrics metrics(QApplication::font());
     _text_widget->setFixedHeight(4*metrics.height());
     horizontalLayout->addWidget(_text_widget);
 
@@ -56,6 +57,14 @@ GraphicDialog::GraphicDialog(QGraphicsScene *scene, const QList<QSharedPointer<D
     connect(&_timer, SIGNAL(timeout()), this, SLOT(next_char()));
 }
 
+GraphicDialog::~GraphicDialog()
+{
+    _timer.stop();
+    scene()->removeItem(this);
+
+    delete _icon_perso;
+}
+
 void GraphicDialog::set_position(QGraphicsScene *scene, const DialogPosition &dialog_pos)
 {
     /*QPointF topLeft = mapToScene (0, 0);
@@ -64,8 +73,8 @@ void GraphicDialog::set_position(QGraphicsScene *scene, const DialogPosition &di
 
     QPointF topLeft = scene->views()[0]->mapToScene( QPoint(0,0) );
     QPointF bottomRight = scene->views()[0]->mapToScene(QPoint(
-                scene->views()[0]->viewport()->width(),
-                scene->views()[0]->viewport()->height()));
+                                                            scene->views()[0]->viewport()->width(),
+                                                        scene->views()[0]->viewport()->height()));
 
     QRectF rect = QRectF(topLeft, bottomRight);
 
@@ -76,30 +85,30 @@ void GraphicDialog::set_position(QGraphicsScene *scene, const DialogPosition &di
               << " w=" << sceneRect.width() << " h=" << sceneRect.height() << std::endl;
 
     // Set position
-   double pos_x = 0;
-   switch(dialog_pos._horizontal_dir) {
-   case LEFT:
-       pos_x = 0;
-       break;
-   case RIGHT:
-       pos_x = sceneRect.width()-size().width();
-       break;
-   default:
-       pos_x = (sceneRect.width()-size().width()) / 2.;
-   break;
-   }
-   double pos_y = 0;
-   switch(dialog_pos._vertical_dir) {
-   case TOP:
-       pos_y = 0;
-       break;
-   case BOTTOM:
-       pos_y = sceneRect.height()-size().height();
-       break;
-   default:
-       pos_y = (sceneRect.height()-size().height()) / 2.;
-   break;
-   }
+    double pos_x = 0;
+    switch(dialog_pos._horizontal_dir) {
+    case LEFT:
+        pos_x = 0;
+        break;
+    case RIGHT:
+        pos_x = sceneRect.width()-size().width();
+        break;
+    default:
+        pos_x = (sceneRect.width()-size().width()) / 2.;
+        break;
+    }
+    double pos_y = 0;
+    switch(dialog_pos._vertical_dir) {
+    case TOP:
+        pos_y = 0;
+        break;
+    case BOTTOM:
+        pos_y = sceneRect.height()-size().height();
+        break;
+    default:
+        pos_y = (sceneRect.height()-size().height()) / 2.;
+        break;
+    }
     setPos(pos_x, pos_y);
 
 
@@ -144,12 +153,12 @@ void GraphicDialog::next_text()
             emit signal_end_of_dialogs();
         }
         else {
-        _cur_letter = 0;
+            _cur_letter = 0;
 
-        // Change the icon
-        _icon_perso->setPixmap(QPixmap(IMAGES_FACES_PATH+_texts[_cur_text].data()->_perso + ".png"));
-        // Start timer
-        _timer.start();
+            // Change the icon
+            _icon_perso->setPixmap(QPixmap(Constants::IMAGES_FACES_PATH+_texts[_cur_text].data()->_perso + ".png"));
+            // Start timer
+            _timer.start();
         }
     }
 }

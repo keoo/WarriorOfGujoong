@@ -3,6 +3,7 @@
 #include <QPixmap>
 //#include <qapplication.h>
 #include "core/map_data/tiledata.hpp"
+#include "constants/ChainConstants.hpp"
 #include "modelarea.h"
 #include "modelworld.h"
 
@@ -38,7 +39,7 @@ ModelWorld::ModelWorld(const QString & fileSource)
                             const QString id (tag_child.attribute("id"));
                             if ( this->_tiles_map.count(id) == 0 )
                             {
-                                QSharedPointer<TileData> pix (new TileData(new QPixmap(tag_child.attribute("path")), tag_child.attribute("canWalk") == "1" ? true : false ));
+                                QSharedPointer<TileData> pix (new TileData(new QPixmap(Constants::IMAGES_PATH + tag_child.attribute("path")), tag_child.attribute("canWalk") == "1" ? true : false ));
                                 this->_tiles_map.insert(pair<QString,QSharedPointer<TileData> >(id,pix));
                             }
                         }

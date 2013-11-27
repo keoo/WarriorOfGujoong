@@ -9,14 +9,14 @@
 #include "player.hpp"
 #include "leveldata.hpp"
 
-LevelData::LevelData(const QList<Player *> &players, const QString &map_area_id) : QObject()
+LevelData::LevelData(QList<Player *> &players, const QString &map_area_id) : QObject()
 {
+    load_dialogs(map_area_id);
+    load_ennemies(map_area_id, players);
+
     _players = players;
     _map_id = map_area_id;
     _current_player = 0;
-
-    load_dialogs(map_area_id);
-    load_ennemies(map_area_id);
 }
 
 LevelData::~LevelData()
@@ -130,7 +130,7 @@ void LevelData::load_dialogs(const QString &map_area_id)
     }
 }
 
-void LevelData::load_ennemies(const QString &map_area_id)
+void LevelData::load_ennemies(const QString &map_area_id, QList<Player *> &players)
 {
     // Initializing xml document class
     QDomDocument doc;
@@ -173,6 +173,6 @@ void LevelData::load_ennemies(const QString &map_area_id)
 
     p2->set_persos(persos);
 
-    _players.push_back(p2);
+    players.push_back(p2);
 }
 

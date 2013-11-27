@@ -28,6 +28,11 @@ QList<Perso *> &Player::get_persos()
     return _persos;
 }
 
+int Player::get_id()
+{
+    return _id;
+}
+
 void Player::perso_dead(Perso *perso)
 {
     _persos.removeAll(perso);

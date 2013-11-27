@@ -15,7 +15,7 @@ class LevelData : public QObject
     Q_OBJECT
 
 public:
-    LevelData(const QList<Player *> &players, const QString &map_area_id);
+    LevelData(QList<Player *> &players, const QString &map_area_id);
 
     ~LevelData();
 
@@ -48,7 +48,7 @@ private:
     void load_dialogs(const QString &map_area_id);
 
     // Load the ennemies corresponding to this level
-    void load_ennemies(const QString &map_area_id);
+    void load_ennemies(const QString &map_area_id, QList<Player *> &players);
 
 public slots:
     void set_next_player();

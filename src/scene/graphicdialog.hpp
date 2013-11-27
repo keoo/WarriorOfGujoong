@@ -25,7 +25,8 @@ class GraphicDialog : public QGraphicsProxyWidget
     Q_OBJECT
 public:
     explicit GraphicDialog(QGraphicsScene *scene, const QList<QSharedPointer<DialogText> > &dialogs, const DialogPosition &dialog_pos);
-    
+    ~GraphicDialog();
+
 private:
     QTimer _timer;
 

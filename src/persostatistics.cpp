@@ -1,9 +1,9 @@
+#include "constants/ChainConstants.hpp"
+/* -- */
 #include "core/Perso.hpp"
 /* -- */
 #include "persostatistics.hpp"
 #include "ui_persostatistics.h"
-
-static const QString IMAGES_FACES_PATH = "/tmp/WarriorOfGujoong-tiles/faces/";
 
 PersoStatistics::PersoStatistics(QWidget *parent) :
     QWidget(parent),
@@ -21,7 +21,7 @@ void PersoStatistics::slot_show_view(Perso *perso)
 {
     setVisible(true);
     // TODO Bind data from perso
-    ui->photo->setPixmap(QPixmap(IMAGES_FACES_PATH+QString::fromStdString(perso->get_name()+".png")));
+    ui->photo->setPixmap(QPixmap(Constants::IMAGES_FACES_PATH+QString::fromStdString(perso->get_name()+".png")));
     ui->name->setText(QString::fromStdString(perso->get_name()));
     ui->class_lvl->setText("Lvl : " + QString().setNum(perso->get_level()));
     ui->hp_label->setText("HP : " + QString().setNum(perso->get_HP()));

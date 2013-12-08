@@ -22,8 +22,9 @@ void StatsScene::set_players(QList<Player *> &players)
 void StatsScene::refresh_stats()
 {
     clear();
+    _layouts.clear();
 
-    printf("Refresh stats\n");
+    qDebug("Refresh stats");
     foreach(Player *player, _players) {
         _layouts.push_back(createPlayerLayout(player));
     }

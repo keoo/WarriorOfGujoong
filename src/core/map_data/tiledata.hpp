@@ -18,7 +18,7 @@ public:
     void set_walkable_for_action(bool walk);
     bool is_walkable_for_action();
 
-    TileData &operator =(const TileData &data);
+    TileData &operator=(const TileData &data);
 
 private:
     QPixmap *_pixmap;

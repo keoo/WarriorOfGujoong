@@ -13,6 +13,7 @@ OBJECTS_DIR=../obj
 MOC_DIR=../obj
 UI_DIR=../obj
 DESTDIR=./
+INCLUDEPATH+=./
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -28,7 +29,6 @@ SOURCES += main.cpp\
         scene/graphicsobject.cpp \
         scene/graphicsscene.cpp \
         computemoves.cpp \
-        persostatistics.cpp \
         scene/actionmenuwindow.cpp \
         scene/graphictile.cpp \
     scene/graphicdialog.cpp \
@@ -53,7 +53,6 @@ HEADERS  += mainwindow.h \
         scene/graphicsobject.hpp \
         scene/graphicsscene.hpp \
         computemoves.hpp \
-        persostatistics.hpp \
         scene/actionmenuwindow.hpp \
         scene/graphictile.hpp \
     scene/graphicdialog.hpp \
@@ -62,8 +61,7 @@ HEADERS  += mainwindow.h \
     scene/fightscene.hpp \
     scene/statsscene.hpp
 
-FORMS    += mainwindow.ui \
-    persostatistics.ui
+FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     World.xml \

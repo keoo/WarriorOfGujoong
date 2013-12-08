@@ -87,6 +87,7 @@ Perso::Perso(std::string name, int perso_id,
     _lvl = lvl;
     _mob = mob;
     _states = state;
+    set_moved(false);
 }
 
 Perso::~Perso(){

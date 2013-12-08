@@ -17,8 +17,6 @@
 #include "scene/statsscene.hpp"
 #include "scene/fightscene.hpp"
 /* -- */
-#include "persostatistics.hpp"
-/* -- */
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -30,11 +28,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->main_view->setMouseTracking(true);
 
     setMinimumSize(800, 600);
-
-    _stats_view = new PersoStatistics(parent);
-
-    ui->horizontalLayout->addWidget(_stats_view);
-    _stats_view->setVisible(false);
 
     FightScene *fight_scene = new FightScene();
     _scenes[FIGHT_SCENE] = fight_scene;
@@ -58,7 +51,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
     std::cout << "resize window " << event->size().width() << " " << event->size().height() << std::endl;
-    _stats_view->setGeometry(0, 0, ui->main_view->size().width()/3, ui->main_view->size().height());
 }
 
 void MainWindow::on_action_new_game_triggered() {
@@ -82,9 +74,6 @@ void MainWindow::load_map(const QString &world_name) {
     ui->main_view->setScene(_current_scene);
 
     _scenes[LEVEL_MAP] = _current_scene;
-
-    //connect(_scene, SIGNAL(signal_perso_mouse_hovered(Perso *)), _stats_view, SLOT(slot_show_view(Perso *)));
-    //connect(_scene, SIGNAL(signal_perso_mouse_quit_hovered()), _stats_view, SLOT(slot_hide_view()));
 
     connect((GraphicsScene*)_current_scene, SIGNAL(signal_begin_fight(Perso *, Perso *)), this, SLOT(slot_begin_fight(Perso *, Perso *)));
     connect((GraphicsScene*)_current_scene, SIGNAL(signal_show_stats()), this, SLOT(slot_show_stats()));
@@ -163,7 +152,7 @@ void MainWindow::temporary_load_human_player(QList <Player *> &players) {
 
 void MainWindow::slot_begin_fight(Perso *yours, Perso *opponent)
 {
-    printf("Switch to fight scene!\n");
+    qDebug("Switch to fight scene!");
     FightScene *scene = dynamic_cast<FightScene *>(_scenes[FIGHT_SCENE]);
     _current_scene = scene;
     ui->main_view->setScene(_current_scene);
@@ -197,9 +186,9 @@ void MainWindow::slot_hide_stats()
 void MainWindow::slot_player_has_lost(Player *p)
 {
     if(p->get_id() == 0) {
-        printf("You lost, TODO Display game over!\n");
+        qDebug("You lost, TODO Display game over!");
     }
     else {
-        printf("You won this level, Display town to buy weapons!\n");
+        qDebug("You won this level, Display town to buy weapons!");
     }
 }

@@ -6,7 +6,6 @@
 
 class Perso;
 class QGraphicsScene;
-class PersoStatistics;
 class Player;
 
 namespace Ui {
@@ -39,9 +38,6 @@ private:
 
     // Scene where the game takes place. The view used is ui->main_view
     QGraphicsScene *_current_scene;
-
-    // Show view where statistics on perso are printed
-    PersoStatistics *_stats_view;
 
     // Load players depending on the fact that it is a new game or a continued game
     // (persos could not be default ones (lvl up, equipment changed, deads...))

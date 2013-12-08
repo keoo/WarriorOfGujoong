@@ -35,7 +35,7 @@
 
 GraphicsScene::GraphicsScene(QObject *parent) :
     QGraphicsScene(parent), _current_state(WAITING), _current_map(NULL), _cursor_position(new QGraphicsRectItem()), _selected_item(NULL),
-    _attack_item(new QGraphicsPixmapItem(QPixmap("../resources/WarriorOfGujoong-tiles/weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))),
+    _attack_item(new QGraphicsPixmapItem(QPixmap(Constants::IMAGES_PATH+"weapons/sword_bronze.png").scaled(TILE_SIZE, TILE_SIZE))),
     _action_menu(new ActionMenuWindow()), _dialogs(NULL)
 {
     setBackgroundBrush(QBrush(Qt::black));
@@ -481,7 +481,7 @@ void GraphicsScene::slot_perso_is_dead(Perso *perso)
             id = i;
     }
     if(id == -1) {
-        printf("error...\n");
+        qDebug("error...");
     }
     else {
         _persos.remove(id);

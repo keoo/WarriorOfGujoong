@@ -2,8 +2,8 @@
 #include <qdom.h>
 #include <QPixmap>
 //#include <qapplication.h>
-#include "core/map_data/tiledata.hpp"
 #include "constants/ChainConstants.hpp"
+#include "core/map_data/tiledata.hpp"
 #include "modelarea.h"
 #include "modelworld.h"
 
@@ -17,6 +17,9 @@ ModelWorld::ModelWorld(const QString & fileSource)
     {
         QFile f(fileSource);
         f.open(QIODevice::ReadOnly);
+        if(!f.isOpen()) {
+            throw("file " + fileSource + " not opened/found");
+        }
         doc.setContent(&f);
         f.close();
     }

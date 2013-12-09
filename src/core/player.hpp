@@ -13,7 +13,7 @@ public:
     explicit Player(int id);
     ~Player();
 
-    void set_persos(const QList<Perso *> &persos);
+    void add_persos(const QList<Perso *> &persos);
 
     QList<Perso *> &get_persos();
 

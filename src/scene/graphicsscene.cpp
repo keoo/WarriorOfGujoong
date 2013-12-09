@@ -79,7 +79,7 @@ void GraphicsScene::create_world(LevelData *mapData)
     foreach(Player *player, _current_map->get_players()) {
         add_objects(player->get_persos());
 
-        connect(player, SIGNAL(signal_player_has_lost(Player*)), this, SLOT(slot_player_has_lost(Player *)));
+        connect(player, SIGNAL(signal_player_has_lost(Player *)), this, SLOT(slot_player_has_lost(Player *)));
     }
 
     // TODO Set to tile size
@@ -267,8 +267,9 @@ void GraphicsScene::keyPressEvent(QKeyEvent *event)
 
                 // Then finish the move
                 move_finished();
-
-                emit signal_begin_fight(attacker, opponent);
+                if(attacker != opponent) { // psychopath are not allowed in this game
+                    emit signal_begin_fight(attacker, opponent);
+                }
 
                 break;
             }
@@ -326,7 +327,6 @@ void GraphicsScene::click_action(const QPointF &pos) {
 
 bool GraphicsScene::finish_turn()
 {
-
     QMessageBox::StandardButton ask_for_finish_turn = QMessageBox::question((QWidget*)this->parent(), Constants::TITLE_ASK_END_TURN,
                                                                             Constants::ASK_END_TURN,
                                                                             QMessageBox::Yes | QMessageBox::No);
@@ -373,14 +373,15 @@ void GraphicsScene::move_action(const QPointF &new_pos) {
 
 void GraphicsScene::move_attack_sword(const QPointF &new_pos) {
     // Get the position in cases
-    QPointF cursor_pos;
-    cursor_pos.setX(((int)new_pos.x() / TILE_SIZE) * TILE_SIZE);
-    cursor_pos.setY(((int)new_pos.y() / TILE_SIZE) * TILE_SIZE);
+
+    QPoint map_position(new_pos.toPoint() / TILE_SIZE);
+    QPointF cursor_pos(map_position * TILE_SIZE);
+
+    Perso *perso = _current_map->get_perso_at(map_position);
 
     // Look if there is a perso at the new position
-    foreach(QGraphicsItem *it, items(new_pos)) {
-        GraphicsObject *perso = qgraphicsitem_cast<GraphicsObject *>(it);
-        if(perso /* && it has to be an ennemi */) {
+    if(_selected_item->get_object()->get_position().distance_to(map_position) <= 1) {
+        if(perso && (perso->get_player_id() != _current_map->get_current_player() || perso == _selected_item->get_object())) {
             _attack_item->setPos(cursor_pos);
         }
     }
@@ -431,6 +432,7 @@ void GraphicsScene::propose_end_of_move_action() {
             if(QDialog::Accepted == _action_menu->exec()) {
                 if(_action_menu->get_action() == Constants::FINISH_ACTION) {
                     _current_state = WAITING;
+                    move_finished();
                 }
                 else {
                     std::cout << "Want to do : " << _action_menu->get_action().toStdString() << std::endl;

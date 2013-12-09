@@ -8,7 +8,7 @@ class Player;
 class Perso;
 class ModelArea;
 class QPoint;
-class DialogText;
+struct DialogText;
 
 class LevelData : public QObject
 {

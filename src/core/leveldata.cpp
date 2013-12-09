@@ -41,11 +41,9 @@ const QList<Player *> &LevelData::get_players() const
 Perso *LevelData::get_perso_at(const QPoint &pos)
 {
     foreach(Player *p, _players) {
-        if(p != _players[_current_player]) {
-            foreach(Perso *perso, p->get_persos()) {
-                if(perso->get_position().distance_to(pos) == 0) {
-                    return perso;
-                }
+        foreach(Perso *perso, p->get_persos()) {
+            if(perso->get_position().distance_to(pos) == 0) {
+                return perso;
             }
         }
     }
@@ -135,15 +133,17 @@ void LevelData::load_ennemies(const QString &map_area_id, QList<Player *> &playe
     // Initializing xml document class
     QDomDocument doc;
     {
-        QFile f("Ennemis.xml");
+        QFile f("Persos.xml");
         f.open(QIODevice::ReadOnly);
+        if(!f.isOpen()) {
+            qDebug(("File " + f.fileName() + " not opened").toStdString().c_str());
+        }
         doc.setContent(&f);
         f.close();
     }
 
-    // Player 2
-    QList<Perso *> persos;
-    Player *p2 = new Player(1);
+    // Other players
+    QMap<int, QList<Perso *> > persos;
 
     // Filling ennemi
     {
@@ -155,13 +155,15 @@ void LevelData::load_ennemies(const QString &map_area_id, QList<Player *> &playe
             if (child.tagName() == "area" && child.attribute("id") == map_area_id) {
                 QDomElement tag_child = child.firstChild().toElement();
                 while(!tag_child.isNull()) {
-                    if (tag_child.tagName() == "enemy") {
+                    if (tag_child.tagName() == "perso") {
                         if (tag_child.hasAttribute("lvl") && tag_child.hasAttribute("x")  && tag_child.hasAttribute("y")) {
-                            Perso *perso = new Perso(tag_child.attribute("id").toStdString(), 1);
+                            int persoId = tag_child.attribute("player").toInt();
+                            Perso *perso = new Perso(tag_child.attribute("id").toStdString(), persoId);
+
                             perso->set_position(Position(tag_child.attribute("x").toInt(), tag_child.attribute("y").toInt(), 0));
                             perso->set_level(tag_child.attribute("lvl").toInt());
                             perso->load_caracteristics();
-                            persos.push_back(perso);
+                            persos[persoId].push_back(perso);
                         }
                     }
                     tag_child = tag_child.nextSibling().toElement();
@@ -171,8 +173,24 @@ void LevelData::load_ennemies(const QString &map_area_id, QList<Player *> &playe
         }
     }
 
-    p2->set_persos(persos);
+    // Add players to the game
+    for(QMap<int, QList<Perso *> >::iterator it = persos.begin() ; it != persos.end() ; ++ it) {
+        Player *p = NULL;
+        int player_id = it.key();
+        foreach(Player *existing_player, players) {
+            if(existing_player->get_id() == player_id) {
+                p = existing_player;
+            }
+        }
 
-    players.push_back(p2);
+        if(!p) { // If the player don't exist we create it
+            p = new Player(player_id);
+        }
+
+        p->add_persos(it.value());
+
+        players.push_back(p);
+
+    }
 }
 

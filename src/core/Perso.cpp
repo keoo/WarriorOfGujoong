@@ -65,6 +65,7 @@ Perso::Perso(WGObject &obj):WGObject(&obj){
     _lvl = 0;
     _mob = 0;
     _states = std::vector<PState>();
+    set_moved(false);
 }
 
 
@@ -324,7 +325,7 @@ Perso::load_caracteristics(){
     // Initializing xml document class
     QDomDocument doc;
     {
-        QFile f("Ennemis.xml");
+        QFile f("Persos.xml");
         f.open(QIODevice::ReadOnly);
         doc.setContent(&f);
         f.close();
@@ -336,11 +337,11 @@ Perso::load_caracteristics(){
         QDomElement child=root.firstChild().toElement();
 
         while(!child.isNull()) {
-            if(child.tagName() == "enemies") {
+            if(child.tagName() == "persos") {
                 QDomElement enemy_node = child.firstChild().toElement();
                 while(!enemy_node.isNull()) {
                     // If we are
-                    if (enemy_node.tagName() == "enemy" && enemy_node.attribute("id").toStdString()==_name) {
+                    if (enemy_node.tagName() == "perso" && enemy_node.attribute("id").toStdString()==_name) {
                         QDomElement tag_child = enemy_node.firstChild().toElement();
                         while(!tag_child.isNull()) {
                             if (tag_child.tagName() == "lvl") {

@@ -78,8 +78,10 @@ void MainWindow::load_map(const QString &world_name) {
     connect((GraphicsScene*)_current_scene, SIGNAL(signal_begin_fight(Perso *, Perso *)), this, SLOT(slot_begin_fight(Perso *, Perso *)));
     connect((GraphicsScene*)_current_scene, SIGNAL(signal_show_stats()), this, SLOT(slot_show_stats()));
 
-    ModelWorld *mw = new ModelWorld("World.xml");
+    ModelWorld *mw = NULL;
     try {
+        mw = new ModelWorld("World.xml");
+
         QList <Player *> players;
         // Load players
         temporary_load_human_player(players);
@@ -145,7 +147,7 @@ void MainWindow::temporary_load_human_player(QList <Player *> &players) {
     persos.push_back(obj);
 
     Player *p1 = new Player(0);
-    p1->set_persos(persos);
+    p1->add_persos(persos);
 
     players.push_back(p1);
 }

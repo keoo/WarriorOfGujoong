@@ -1,0 +1,46 @@
+<World>
+    <persos>
+    <perso id="kyle">
+        <lvl id="1" HP="20" MP="12" def="5" mob="4" str="6"/>
+        <lvl id="2" HP="24" MP="12" def="6" mob="4" str="6"/>
+        <lvl id="3" HP="28" MP="13" def="6" mob="4" str="7"/>
+    </perso>
+    <perso id="chun">
+        <lvl id="1" HP="10" MP="12" def="4" mob="6" str="5"/>
+        <lvl id="2" HP="13" MP="12" def="5" mob="6" str="6"/>
+        <lvl id="3" HP="16" MP="13" def="5" mob="6" str="6"/>
+    </perso>
+
+    <perso id="unknown">
+        <lvl id="1" HP="30" MP="0" def="3" mob="8" str="4"/>
+        <lvl id="2" HP="33" MP="0" def="4" mob="8" str="4"/>
+        <lvl id="3" HP="36" MP="0" def="5" mob="8" str="4"/>
+    </perso>
+    <perso id="soldier">
+        <lvl id="1" HP="15" MP="0" def="2" mob="8" str="2"/>
+        <lvl id="2" HP="18" MP="0" def="2" mob="8" str="2"/>
+        <lvl id="3" HP="21" MP="0" def="3" mob="8" str="3"/>
+    </perso>
+    <perso id="reese">
+        <lvl id="5" player="1" HP="35" MP="3" def="5" mob="3" str="6"/>
+    </perso>
+    </persos>
+
+    <area id="1">
+        <perso id="unknown" player="1" lvl="1" x="17" y="4" />
+        <perso id="soldier" player="1" lvl="1" x="16" y="4" />
+        <perso id="soldier" player="1" lvl="1" x="18" y="4" />
+    </area>
+
+    <area id="2">
+        <perso id="reese" player="1" lvl="5" x="7" y="7" />
+        <perso id="soldier" player="1" lvl="2" x="6" y="7" />
+        <perso id="soldier" player="1" lvl="3" x="7" y="6" />
+        <perso id="soldier" player="1" lvl="3" x="8" y="7" />
+    </area>
+
+    <area id="test">
+        <perso id="soldier" player="1" lvl="1" x="4" y="6" />
+        <perso id="soldier" player="2" lvl="1" x="3" y="6" />
+    </area>
+</World>

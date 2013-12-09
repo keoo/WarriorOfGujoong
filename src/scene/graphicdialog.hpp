@@ -10,7 +10,7 @@
 class QGraphicsScene;
 class QLabel;
 class QTextEdit;
-class DialogText;
+struct DialogText;
 
 struct DialogPosition {
     Direction _horizontal_dir;

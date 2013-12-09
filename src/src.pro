@@ -13,7 +13,7 @@ OBJECTS_DIR=../obj
 MOC_DIR=../obj
 UI_DIR=../obj
 DESTDIR=./
-INCLUDEPATH+=./
+INCLUDEPATH+=.
 
 SOURCES += main.cpp\
         mainwindow.cpp \
@@ -65,5 +65,5 @@ FORMS    += mainwindow.ui
 
 OTHER_FILES += \
     World.xml \
-    Ennemis.xml \
-    Dialogs.xml
+    Dialogs.xml \
+    Persos.xml

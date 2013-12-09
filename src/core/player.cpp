@@ -15,10 +15,10 @@ Player::~Player() {
     _persos.clear();
 }
 
-void Player::set_persos(const QList<Perso *> &persos)
+void Player::add_persos(const QList<Perso *> &persos)
 {
-    _persos = persos;
-    foreach(Perso *p, _persos) {
+    _persos += persos;
+    foreach(Perso *p, persos) {
         connect(p, SIGNAL(signal_perso_is_dead(Perso *)), this, SLOT(perso_dead(Perso *)));
     }
 }

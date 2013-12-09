@@ -41,7 +41,7 @@ public :
   /**
    * \brief Constructor
    */
-  Perso(std::string name,
+  Perso(std::string name, int player_id,
         double HP = 0.0, double MP = 0.0,
 	double strength = 0.0, double power = 0.0,
 	double def = 0.0, double mr = 0.0,
@@ -58,10 +58,20 @@ public :
   void
   set_HP(const double hp);
   /**
+   * \brief Set max HP
+   */
+  void
+  set_max_HP(const double hp);
+  /**
    * \brief Set MP
    */
   void
   set_MP(const double mp);
+  /**
+   * \brief Set max MP
+   */
+  void
+  set_max_MP(const double mp);
   /**
    * \brief Set defense
    */
@@ -102,11 +112,23 @@ public :
    */
   double
   get_HP();
+
+  /**
+   * \brief Get max_HP
+   */
+  double
+  get_max_HP();
   /**
    * \brief Get MP
    */
   double
   get_MP();
+  /**
+   * \brief Get max_MP
+   */
+  double
+  get_max_MP();
+
   /**
    * \brief Get defense
    */
@@ -223,6 +245,20 @@ public :
    */
   bool has_moved() const;
 
+  /**
+   * @brief get_player_id
+   * @return The player id
+   */
+  int get_player_id();
+
+  /**
+   * @brief load_caracteristics
+   * Load the caracteristics of the perso given its level
+   * Read from xml file the data. Only works for enemies
+   */
+  void load_caracteristics();
+
+
 protected :
   /**
    * \brief Level of the char
@@ -237,9 +273,17 @@ protected :
    */
   double _HP;
   /**
+   * \brief Maximum heal of the perso
+   */
+  double _max_HP;
+  /**
    * \brief Mana to launch spells
    */
   double _MP;
+  /**
+   * \brief Maximum mana to launch spells
+   */
+  double _max_MP;
   /**
    * \brief Physical damage
    */
@@ -285,13 +329,37 @@ protected :
    * \brief if the perso has moved for this turn
    */
   bool _has_moved;
+  /**
+   * @brief player controlling this perso
+   */
+  int _player_id;
 
 public slots:
   /**
-   * \brief slot_set_has_moved
-   * Called when the animation of the moving perso is finished
+   * @brief slot_set_has_moved
    */
-  void slot_set_has_moved(bool);
+  void slot_set_has_moved();
+  /**
+   * @brief slot_reset_has_moved
+   */
+  void slot_reset_has_moved();
+
+private:
+  /**
+   * @brief set_has_moved
+   * @param mv
+   * Emits a signal telling that the perso has moved for this turn
+   */
+  void  set_moved(bool mv);
+
+signals:
+  void signal_set_has_moved(bool);
+
+  /**
+   * @brief signal_perso_is_dead
+   * Emitted when the perso has no more HP
+   */
+  void signal_perso_is_dead(Perso *perso);
 };
 
 #endif

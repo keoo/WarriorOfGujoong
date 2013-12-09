@@ -1,0 +1,18 @@
+<Dialog>
+    <area id="1">
+        <phrase perso="kyle" content="Hello, is there anybody here ??"/>
+        <phrase perso="ryan" content="Yes, I am."/>
+        <phrase perso="chun" content="We need to get out of here. I'm gonna wet my pants."/>
+        <phrase perso="ryan" content="Shut up woman, you need to go to the kitchen !"/>
+        <phrase perso="chun" content="Oh you are so right. I'm a woman and I need to do the cleaning."/>
+    </area>
+
+    <area id="2">
+        <phrase perso="soldier" content="Hey, boss ! They try to escape to the lady room."/>
+        <phrase perso="unknown" content="Oh, damn, we need to protect the lady."/>
+        <phrase perso="chun" content="I heard you can pee in the lady room, let's go."/>
+        <phrase perso="ryan" content="Let her here..."/>
+        <phrase perso="kyle" content="Hmmmm ... No, when we escape she could do the meals so we need her."/>
+        <phrase perso="ryan" content="Ok, but if we can kidnap the princess, I won't hesitate !"/>
+     </area>
+</Dialog>

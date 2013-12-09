@@ -6,6 +6,11 @@
 #include <QFile>
 #include <iostream>
 /* -- */
+#include "constants/ChainConstants.hpp"
+/* -- */
+#include "scene/graphictile.hpp"
+#include "scene/graphicdeadeffect.hpp"
+/* -- */
 #include "computemoves.hpp"
 /* -- */
 #include "core/Perso.hpp"
@@ -13,6 +18,8 @@
 #include "scene/graphicsobject.hpp"
 
 static const int UPDATE_PERIOD = 200;
+
+#define TILE_SIZE 48
 
 GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
     // Get images depending on the name
@@ -27,11 +34,11 @@ GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
         // Load image for this direction while files exist for this direction
         while(file_exists) {
             // Check for next file
-            const QString filename = QString::fromStdString(obj->get_name()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
+            const QString filename = Constants::IMAGES_PERSOS_PATH + QString::fromStdString(obj->get_name()) + "_" + direction_list.at(i) + QString("_%1.png").arg(tile_id);
 
             if(QFile::exists(filename)) {
                 // File exists, we load the pixmap
-                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(48, 48), this));
+                img.data()->_items.append(new QGraphicsPixmapItem(QPixmap(filename).scaled(TILE_SIZE, TILE_SIZE), this));
                 img.data()->_items.last()->setVisible(false);
             }
             else {
@@ -65,9 +72,12 @@ GraphicsObject::GraphicsObject(Perso *obj) : QObject(), _perso(obj) {
     // Connect animation timer
     connect(&_move_timer, SIGNAL(timeout()), this, SLOT(updateAnimation()));
 
-    // Connect slot_perso_has_move to signal from Perso
-    connect(this, SIGNAL(signal_finish_moved(bool)), _perso, SLOT(slot_set_has_moved(bool)));
-    connect(this, SIGNAL(signal_finish_moved(bool)), this, SLOT(slot_perso_has_move(bool)));
+    // Connection between the graphical object and the data
+    connect(_perso, SIGNAL(signal_set_has_moved(bool)), this, SLOT(slot_perso_has_move(bool)));
+
+    // Connection between the graphical object and the data
+    connect(_perso, SIGNAL(signal_perso_is_dead(Perso *)), this, SLOT(slot_perso_dead(Perso *)));
+
 }
 
 GraphicsObject::~GraphicsObject()
@@ -85,6 +95,17 @@ void GraphicsObject::move_object_to(const QPointF &new_pos)
     _actions = ComputeMoves::create_moves(pos(), new_pos);
 
     _move_timer.start(UPDATE_PERIOD);
+
+    _perso->slot_set_has_moved();
+    // Set new position to the data
+    _perso->set_position(Position(new_pos.x()/TILE_SIZE, new_pos.y()/TILE_SIZE, 0.));
+
+}
+
+void GraphicsObject::slot_perso_dead(Perso *)
+{
+    // setGraphicsEffect(new GraphicDeadEffect());
+    deleteLater();
 }
 
 bool GraphicsObject::has_moved() const
@@ -107,6 +128,11 @@ void GraphicsObject::slot_perso_has_move(bool has_moved)
     }
 }
 
+void GraphicsObject::slot_set_current_player(int cur_player)
+{
+    _status->setVisible(cur_player == _perso->get_player_id());
+}
+
 void GraphicsObject::updateAnimation()
 {
     static bool zoom = false;
@@ -117,12 +143,8 @@ void GraphicsObject::updateAnimation()
         scene()->views().at(0)->scale(scaleFactor, scaleFactor);
     }
 
-    scene()->views().at(0)->centerOn(this);
     // Last move
     if(_actions->get_current_move() >= _actions->get_moves()->size()) {
-        if(_actions->get_current_move() != 0) {
-            setPos(_actions->get_moves()->at(_actions->get_current_move()-1)->pos_final);
-        }
         _current_pixmap->setVisible(false);
         _current_pixmap = _pixmaps[BOTTOM]->_items[0];
         _current_pixmap->setVisible(true);
@@ -136,13 +158,13 @@ void GraphicsObject::updateAnimation()
         }
 
         _move_timer.stop();
-        emit(signal_finish_moved(true));
+
+        emit signal_finish_moved();
 
         ComputeMoves::release_moves(_actions);
         _actions = NULL;
 
         scene()->views().at(0)->scale(1./scaleFactor, 1./scaleFactor);
-        scene()->views().at(0)->centerOn(0, 0);
         zoom = false;
     }
     else {

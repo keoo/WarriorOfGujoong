@@ -3,13 +3,17 @@
 
 #include <QGraphicsScene>
 #include <QPointer>
-#include <QVector>
+#include <QList>
+/* -- */
+#include "scene/graphictile.hpp"
 
-class ModelWorld;
+class LevelData;
 class ModelArea;
 class GraphicsObject;
 class ActionMenuWindow;
 class Perso;
+class GraphicDialog;
+class Player;
 
 enum ActionState {
     WAITING,
@@ -26,15 +30,15 @@ public:
 
     ~GraphicsScene();
 
-    // Sets the map as current map. Does not free the memory used by the old map.
-    void create_world(ModelWorld *new_model_world, const QString &world_name);
-
-    // TODO load from files
-    void add_objects(const QVector<Perso *> objects);
+    // Sets the map as current map.
+    void create_world(LevelData *mapData);
 
     void select_object(GraphicsObject *item);
     void unselect_object();
     bool has_selected_object() const;
+
+    // Free the data used by the scene (clear the items list, delete the current map)
+    void free_data();
 
 protected:
     // Methods inherited from the scene
@@ -47,7 +51,12 @@ private:
     ActionState _current_state;
 
     // Data of the current map
-    ModelWorld *_current_map;
+    LevelData *_current_map;
+
+    QVector<QVector<QSharedPointer<GraphicTile> > > _tilesData;
+
+    // Data for persos
+    QVector<GraphicsObject *> _persos;
 
     QGraphicsRectItem *_cursor_position;
 
@@ -57,11 +66,13 @@ private:
 
     ActionMenuWindow *_action_menu;
 
+    GraphicDialog *_dialogs;
+
     // Creates the graphical items of the map and display them according to their position
     void create_map(const QSharedPointer<ModelArea> &area);
 
-    // Free the data used by the scene (clear the items list, delete the current map)
-    void free_data();
+    // TODO load from files
+    void add_objects(const QList<Perso *> objects);
 
     void click_action(const QPointF &pos);
 
@@ -73,13 +84,29 @@ private:
 
     void move_finished();
 
+    bool has_ennemi_perso_around(const QPointF &pt);
+
 signals:
     void signal_end_of_turn();
+
     void signal_perso_mouse_hovered(Perso *perso);
+
     void signal_perso_mouse_quit_hovered();
+
+    void signal_begin_fight(Perso *yours, Perso *opponent);
+
+    // Emitted when pushing 's'
+    void signal_show_stats();
 
 public slots:
     void propose_end_of_move_action();
+    void hide_dialogs();
+
+    // Called when a player has lost
+    void slot_player_has_lost(Player *);
+
+    // Used because we store persos in class. Useful to store persos ?
+    void slot_perso_is_dead(Perso *);
 
 };
 

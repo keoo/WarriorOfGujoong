@@ -6,6 +6,7 @@
 #ifndef __POSITION__HH__
 #define __POSITION__HH__
 
+class QPoint;
 /**
  * \brief A 3D position
  * \class Position
@@ -76,6 +77,15 @@ public :
    */
   void
   move(Position& p);
+
+  /**
+   * @brief distance_to
+   * @param pt
+   * @return the distance between this point and pt
+   */
+  int
+  distance_to(const QPoint &pt);
+
 private:
   /**
    * \brief x position of the object

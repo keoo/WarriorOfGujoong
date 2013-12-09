@@ -26,8 +26,8 @@ void ActionMenuWindow::set_actions(const QStringList& actions) {
     foreach(QString act, actions) {
         QRadioButton *button = new QRadioButton(act);
         layout()->addWidget(button);
-        button->setStyleSheet(" QRadioButton::indicator::checked  {image: url(/tmp/WarriorOfGujoong-tiles/tile-mountain.png);} \
-                              QRadioButton::indicator::unchecked  {image: url(/tmp/WarriorOfGujoong-tiles/tile-hill-001.png);}");
+        button->setStyleSheet(" QRadioButton::indicator::checked  {background-color:green} \
+                              QRadioButton::indicator::unchecked  {background-color:red}");
         _buttons.push_back(button);
         _group.addButton(button);
     }

@@ -1,3 +1,5 @@
+#include <QPoint>
+#include <cmath>
 #include "Position.hpp"
 
 
@@ -64,4 +66,9 @@ Position::move(Position& p){
   _x += p.getX();
   _y += p.getY();
   _z += p.getZ();
+}
+
+int
+Position::distance_to(const QPoint &pt){
+    return (abs(_x-pt.x())+abs(_y-pt.y()));
 }

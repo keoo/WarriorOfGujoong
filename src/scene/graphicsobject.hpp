@@ -77,9 +77,19 @@ public slots:
      */
     void slot_perso_has_move(bool has_moved);
 
+    /**
+     * @brief slot_set_current_player
+     * @param next_player
+     * Checks if next player to play is the one of this perso.
+     * Show or hide the circle telling if the perso has moved
+     */
+    void slot_set_current_player(int cur_player);
+
+    void slot_perso_dead(Perso *);
+
 signals:
-    // Signal throw when the animation is finished
-    void signal_finish_moved(bool);
+    // Send to the scene to tell that the perso has finished to moved (animation is finished) and he can now attack or magic or do nothing
+    void signal_finish_moved();
 
 };
 

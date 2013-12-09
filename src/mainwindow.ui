@@ -33,7 +33,9 @@
     <property name="title">
      <string>&amp;New game</string>
     </property>
+    <addaction name="action_new_game"/>
     <addaction name="action_load_game"/>
+    <addaction name="action_Save_map"/>
    </widget>
    <addaction name="menu_LoadMap"/>
   </widget>
@@ -49,6 +51,16 @@
   <action name="action_load_game">
    <property name="text">
     <string>&amp;Load map</string>
+   </property>
+  </action>
+  <action name="action_new_game">
+   <property name="text">
+    <string>&amp;New game</string>
+   </property>
+  </action>
+  <action name="action_Save_map">
+   <property name="text">
+    <string>&amp;Save map</string>
    </property>
   </action>
  </widget>
